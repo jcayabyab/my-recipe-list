@@ -4,15 +4,17 @@ import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import { useTheme } from "@material-ui/core";
+import LoginForm from "./LoginForm";
 
 const Header = styled.div`
-  background-color: #00bfd8;
+  background-color: ${({ palette }) => palette.primary.main};
   padding: 70px 0px;
   text-align: center;
   font-family: "Raleway", Roboto, Arial;
   font-weight: bold;
   color: white;
-  border-bottom: #ff6363 20px solid;
+  border-bottom: ${({ palette }) => palette.secondary.main} 20px solid;
 `;
 
 const Title = styled.div`
@@ -36,29 +38,18 @@ const LoginField = styled.div`
 
 const LandingPage = () => {
 
-  const testFunc = async () => {
-    const result = await axios.get("/api/test");
-    console.log(result.data.result);
-  }
+  const { palette } = useTheme();
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <Header>
+      <Header palette={palette}>
         <Title>MyRecipeList</Title>
         <Subtitle>Discover and save your new favourite recipe!</Subtitle>
       </Header>
       <Body>
         <LoginField>
-          Insert form here
-          <Button
-            style={{ margin: "0px 10px" }}
-            color="primary"
-            variant="contained"
-            onClick={() => testFunc()}
-          >
-            Login
-          </Button>
+          <LoginForm></LoginForm>
           <div>
             <small>
               {/* // TODO: change to Route tag*/}

@@ -5,7 +5,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 const NavBar = () => {
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="secondary">
       <Toolbar>
         <Button color="inherit">Login</Button>
       </Toolbar>
