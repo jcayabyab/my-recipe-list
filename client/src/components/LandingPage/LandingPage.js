@@ -2,10 +2,12 @@ import React from "react";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
 import axios from "axios";
 import { useTheme } from "@material-ui/core";
 import LoginForm from "./LoginForm";
+import { LOGIN } from "../../contexts/types";
+import { UserContext } from "../../contexts/UserContext";
+import { withRouter } from "react-router-dom";
 
 const Header = styled.div`
   background-color: ${({ palette }) => palette.primary.main};
@@ -36,7 +38,24 @@ const LoginField = styled.div`
   align-items: center;
 `;
 
-const LandingPage = () => {
+const LandingPage = props => {
+  const [, dispatchToUser] = React.useContext(UserContext);
+  const [incorrectPassword, setIncorrectPassword] = React.useState(false);
+
+  const handleLogin = async (username, password) => {
+    try {
+      const res = await axios.get("/api/login", {
+        params: { username, password }
+      });
+      dispatchToUser({ type: LOGIN, payload: res.data });
+      props.history.push("/home");
+    } catch (err) {
+      console.log(err.response.status);
+      if ((err.response.status = "401")) {
+        setIncorrectPassword(true);
+      }
+    }
+  };
 
   const { palette } = useTheme();
 
@@ -49,7 +68,10 @@ const LandingPage = () => {
       </Header>
       <Body>
         <LoginField>
-          <LoginForm></LoginForm>
+          <LoginForm
+            incorrect={incorrectPassword}
+            handleLogin={handleLogin}
+          ></LoginForm>
           <div>
             <small>
               {/* // TODO: change to Route tag*/}
@@ -62,4 +84,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default withRouter(LandingPage);

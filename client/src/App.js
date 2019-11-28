@@ -5,35 +5,29 @@ import SearchPage from "./components/SearchPage/SearchPage";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@material-ui/core";
 import theme from "./contexts/MuiTheme";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 import { UserContext } from "./contexts/UserContext";
 
-const App = () => {
-  const { state, dispatch } = useContext(UserContext);
-
-  console.log(state);
+const App = props => {
+  const [ userState ] = useContext(UserContext);
 
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <NavBar></NavBar>
-        <div>
-          <Switch>
-            <Route exact path="/">
-              <LandingPage></LandingPage>
-            </Route>
-            <PrivateRoute path="/home">
-              <HomePage></HomePage>
-            </PrivateRoute>
-            <PrivateRoute user={state.user} path="/search">
-              <SearchPage></SearchPage>
-            </PrivateRoute>
-          </Switch>
-        </div>
-      </BrowserRouter>
+      {props.location.pathname !== "/" && <NavBar></NavBar>}
+      <Switch>
+        <Route exact path="/">
+          <LandingPage></LandingPage>
+        </Route>
+        <PrivateRoute user={userState.user} path="/home">
+          <HomePage></HomePage>
+        </PrivateRoute>
+        <PrivateRoute user={userState.user} path="/search">
+          <SearchPage></SearchPage>
+        </PrivateRoute>
+      </Switch>
     </ThemeProvider>
   );
 };
 
-export default App;
+export default withRouter(App);

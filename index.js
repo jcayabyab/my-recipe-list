@@ -1,15 +1,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-require("./services/exampleService");
+const mysql = require("mysql");
+// require("./services/exampleService");
 
 const app = express();
+
+const connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "myrecipelist-db"
+});
+
+connection.connect();
 
 // middlewares / services go here
 app.use(bodyParser.json());
 
 // routes go here
-require("./routes/serverRoutes")(app);
-require("./routes/devRoutes")(app);
+require("./routes/loginRoutes")(app, connection);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

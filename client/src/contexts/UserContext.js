@@ -20,6 +20,6 @@ function reducer(state, action) {
 
 export function UserProvider(props) {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  const value = { state, dispatch };
+  const value = [ state, dispatch ];
   return <UserContext.Provider value={value}>{props.children}</UserContext.Provider>;
 }

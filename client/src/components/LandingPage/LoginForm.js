@@ -1,9 +1,7 @@
 import React from "react";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, FormHelperText } from "@material-ui/core";
 import styled from "styled-components";
-import axios from "axios";
-import { UserContext } from "../../contexts/UserContext";
-import { LOGIN } from "../../contexts/types";
+import { useTheme } from "@material-ui/core";
 
 const LoginButton = styled(Button)`
   margin: 0px 10px;
@@ -20,34 +18,38 @@ const Form = styled.form`
   }
 `;
 
-const LoginForm = () => {
+const LoginForm = ({ handleLogin, incorrect }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const { state, dispatch } = React.useContext(UserContext);
+  const [showErrors, setShowErrors] = React.useState(false);
 
-  const handleLogin = async e => {
+  const { palette } = useTheme();
+
+  const formHasErrors = () => {
+    return username.length === 0 || password.length === 0;
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
-    console.log(username, password);
-    // fake backend route
-    dispatch({
-      type: LOGIN,
-      payload: {
-        username: "test",
-        password: "McGee",
-        firstName: "Test",
-        lastName: "McGee",
-        profilePictureUrl: null,
-        country: "Canada"
-      }
-    });
+    // show after first submit
+    setShowErrors(true);
+
+    if (!formHasErrors()) {
+      handleLogin(username, password);
+    }
   };
 
   return (
-    <Form noValidate autoComplete="off" onSubmit={e => handleLogin(e)}>
+    <Form noValidate onSubmit={handleSubmit}>
       <TextField
         label="Username"
         variant="outlined"
         onChange={e => setUsername(e.target.value)}
+        autoComplete="username"
+        error={showErrors && username.length === 0}
+        helperText={
+          showErrors && username.length === 0 && "Please enter a username."
+        }
       >
         {username}
       </TextField>
@@ -57,10 +59,20 @@ const LoginForm = () => {
         variant="outlined"
         onChange={e => setPassword(e.target.value)}
         type="password"
+        autoComplete="password"
+        error={showErrors && password.length === 0}
+        helperText={
+          showErrors && password.length === 0 && "Please enter a password.\n"
+        }
       >
         {password}
       </TextField>
-      <LoginButton color="primary" type="submit" variant="contained">
+      {incorrect && (
+        <FormHelperText style={{ color: palette.error.main }}>
+          Incorrect password. Please try again.
+        </FormHelperText>
+      )}
+      <LoginButton color="secondary" type="submit" variant="contained">
         Login
       </LoginButton>
     </Form>
