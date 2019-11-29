@@ -1,3 +1,5 @@
+const camelcaseKeys = require("camelcase-keys");
+
 module.exports = (app, connection) => {
   app.get("/api/login", async (req, res) => {
     const { username, password } = req.query;
@@ -17,7 +19,7 @@ module.exports = (app, connection) => {
         if(results.length !== 1) {
           return res.status(401).send("Login failed.") // failed login (or extra logins?)
         }
-        res.send(results[0]);
+        res.send(camelcaseKeys(results[0]));
       }
     );
   });
