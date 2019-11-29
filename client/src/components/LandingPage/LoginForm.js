@@ -19,14 +19,14 @@ const Form = styled.form`
 `;
 
 const LoginForm = ({ handleLogin, incorrect }) => {
-  const [username, setUsername] = React.useState("");
+  const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [showErrors, setShowErrors] = React.useState(false);
 
   const { palette } = useTheme();
 
   const formHasErrors = () => {
-    return username.length === 0 || password.length === 0;
+    return userName.length === 0 || password.length === 0;
   };
 
   const handleSubmit = e => {
@@ -35,7 +35,7 @@ const LoginForm = ({ handleLogin, incorrect }) => {
     setShowErrors(true);
 
     if (!formHasErrors()) {
-      handleLogin(username, password);
+      handleLogin(userName, password);
     }
   };
 
@@ -44,14 +44,14 @@ const LoginForm = ({ handleLogin, incorrect }) => {
       <TextField
         label="Username"
         variant="outlined"
-        onChange={e => setUsername(e.target.value)}
+        onChange={e => setUserName(e.target.value)}
         autoComplete="username"
-        error={showErrors && username.length === 0}
+        error={showErrors && userName.length === 0}
         helperText={
-          showErrors && username.length === 0 && "Please enter a username."
+          showErrors && userName.length === 0 && "Please enter a username."
         }
       >
-        {username}
+        {userName}
       </TextField>
       <TextField
         label="Password"

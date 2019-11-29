@@ -5,6 +5,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useTheme } from "@material-ui/core";
 import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
 import { LOGIN } from "../../contexts/types";
 import { UserContext } from "../../contexts/UserContext";
 import { withRouter } from "react-router-dom";
@@ -31,7 +32,14 @@ const Body = styled(Container)`
   padding: 20px 0px;
 `;
 
-const LoginField = styled.div`
+const FormsWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+`;
+
+const FormField = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -41,11 +49,12 @@ const LoginField = styled.div`
 const LandingPage = props => {
   const [, dispatchToUser] = React.useContext(UserContext);
   const [incorrectPassword, setIncorrectPassword] = React.useState(false);
+  const [userNameExists, setUserNameExists] = React.useState(false);
 
-  const handleLogin = async (username, password) => {
+  const handleLogin = async (userName, password) => {
     try {
       const res = await axios.get("/api/login", {
-        params: { username, password }
+        params: { username: userName, password }
       });
       dispatchToUser({ type: LOGIN, payload: res.data });
       props.history.push("/home");
@@ -53,6 +62,40 @@ const LandingPage = props => {
       console.log(err.response.status);
       if ((err.response.status = "401")) {
         setIncorrectPassword(true);
+      }
+    }
+  };
+
+  const handleRegister = async (
+    userName,
+    password,
+    firstName,
+    lastName,
+    country,
+    profilePicture
+  ) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("userName", userName);
+      formData.append("password", password);
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("country", country);
+      formData.append("profilePicture", profilePicture);
+
+      const res = await axios.post("/api/login/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      dispatchToUser({ type: LOGIN, payload: res.data });
+      props.history.push("/home");
+    } catch (err) {
+      console.log(err.response.status);
+      if ((err.response.status = "403")) {
+        setUserNameExists(true);
       }
     }
   };
@@ -67,18 +110,29 @@ const LandingPage = props => {
         <Subtitle>Discover and save your new favourite recipe!</Subtitle>
       </Header>
       <Body>
-        <LoginField>
-          <LoginForm
-            incorrect={incorrectPassword}
-            handleLogin={handleLogin}
-          ></LoginForm>
-          <div>
-            <small>
-              {/* // TODO: change to Route tag*/}
-              Not a registered user? Sign up <a href="/">here</a>.
-            </small>
-          </div>
-        </LoginField>
+        <FormsWrapper>
+          <FormField>
+            <h1>Login to an existing account:</h1>
+            <LoginForm
+              incorrect={incorrectPassword}
+              handleLogin={handleLogin}
+            ></LoginForm>
+          </FormField>
+          <div
+            style={{
+              width: "6px",
+              backgroundColor: palette.secondary.main,
+              alignSelf: "stretch"
+            }}
+          ></div>
+          <FormField>
+            <h1>Create a new account:</h1>
+            <RegisterForm
+              usernameExists={userNameExists}
+              handleRegister={handleRegister}
+            ></RegisterForm>
+          </FormField>
+        </FormsWrapper>
       </Body>
     </React.Fragment>
   );
