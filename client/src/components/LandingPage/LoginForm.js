@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Button, FormHelperText } from "@material-ui/core";
+import { TextField, Button, FormHelperText, Box } from "@material-ui/core";
 import styled from "styled-components";
 import { useTheme } from "@material-ui/core";
 
@@ -12,10 +12,12 @@ const Form = styled.form`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  flex: 1;
+`;
 
-  & > * {
-    margin: 10px 0px !important;
-  }
+const TextFieldMargin = styled(TextField)`
+  margin: 10px 10px 20px 10px !important;
+  flex: 1;
 `;
 
 const LoginForm = ({ handleLogin, incorrect }) => {
@@ -41,37 +43,39 @@ const LoginForm = ({ handleLogin, incorrect }) => {
 
   return (
     <Form noValidate onSubmit={handleSubmit}>
-      <TextField
-        label="Username"
-        variant="outlined"
-        onChange={e => setUserName(e.target.value)}
-        autoComplete="username"
-        error={showErrors && userName.length === 0}
-        helperText={
-          showErrors && userName.length === 0 && "Please enter a username."
-        }
-      >
-        {userName}
-      </TextField>
-      <TextField
-        label="Password"
-        hidden
-        variant="outlined"
-        onChange={e => setPassword(e.target.value)}
-        type="password"
-        autoComplete="password"
-        error={showErrors && password.length === 0}
-        helperText={
-          showErrors && password.length === 0 && "Please enter a password.\n"
-        }
-      >
-        {password}
-      </TextField>
-      {incorrect && (
-        <FormHelperText style={{ color: palette.error.main }}>
-          Incorrect password. Please try again.
-        </FormHelperText>
-      )}
+      <Box justifyContent="center" display="flex">
+        <TextFieldMargin
+          label="Username"
+          variant="outlined"
+          onChange={e => setUserName(e.target.value)}
+          autoComplete="username"
+          error={showErrors && userName.length === 0}
+          helperText={
+            showErrors && userName.length === 0 && "Please enter a username."
+          }
+        >
+          {userName}
+        </TextFieldMargin>
+        <TextFieldMargin
+          label="Password"
+          hidden
+          variant="outlined"
+          onChange={e => setPassword(e.target.value)}
+          type="password"
+          autoComplete="password"
+          error={showErrors && password.length === 0}
+          helperText={
+            showErrors && password.length === 0 && "Please enter a password.\n"
+          }
+        >
+          {password}
+        </TextFieldMargin>
+        {incorrect && (
+          <FormHelperText style={{ color: palette.error.main }}>
+            Incorrect password. Please try again.
+          </FormHelperText>
+        )}
+      </Box>
       <LoginButton color="secondary" type="submit" variant="contained">
         Login
       </LoginButton>
