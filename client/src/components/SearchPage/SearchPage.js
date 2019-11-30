@@ -1,49 +1,69 @@
 import React from "react";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
 import styled from "styled-components";
-import nizam from "./nizam.png"
+import axios from "axios";
+import { useTheme } from "@material-ui/core";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
+import { LOGIN } from "../../contexts/types";
+import { UserContext } from "../../contexts/UserContext";
+import { withRouter } from "react-router-dom";
+import ResultList from "../../utils/ResultList";
+import RecipeSearchForm from "./RecipeSearchForm";
 
-const NavBar = styled.div`
+const Header = styled.div`
+  background-color: ${({ palette }) => palette.primary.main};
+  padding: 70px 0px;
+  text-align: center;
+  font-family: "Raleway", Roboto, Arial;
+  font-weight: bold;
+  color: white;
+  border-bottom: ${({ palette }) => palette.secondary.main} 20px solid;
+`;
+
+const Title = styled.div`
+  font-size: 60px;
+`;
+
+const Subtitle = styled.div`
+  font-size: 30px;
+`;
+
+const Body = styled(Container)`
+  padding: 20px 0px;
+`;
+
+const FormsWrapper = styled.div`
   display: flex;
-  font-family: "Comic Sans MS";
-  justify-content: space-between;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+`;
+
+const FormField = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 20px;
-  border: 3px lime solid;
-  color: skyblue;
-  font-size: 20px;
+  flex: 1;
 `;
 
-const SearchForm = styled.form`
-  color: lime;
-`;
+const SearchPage = props => {
+  const [, dispatchToUser] = React.useContext(UserContext);
+  const [incorrectPassword, setIncorrectPassword] = React.useState(false);
+  const [userNameExists, setUserNameExists] = React.useState(false);
 
-const SearchPage = () => {
+  const { palette } = useTheme();
+
   return (
     <React.Fragment>
-      <NavBar>
-        <div>MyRecipeList for Jancuks</div>
-        <div>My List</div>
-        <div>Search</div>
-        <div>Logout</div>
-      </NavBar>
-      <SearchForm>
-        <div>
-          <label>Name: </label>
-          <input type="text"></input>
-        </div>
-        <div>
-          <label>Ingredient: </label>
-          <input type="text"></input>
-        </div>
-        <div>
-          <label>Kitchin' Ahtem: </label>
-          <input type="text"></input>
-        </div>
-        <input type="submit"></input>
-      </SearchForm>
-      <img src={nizam} alt="nizam hello" style={{height: "300px", width: "300px", float: "right"}}></img>
+      <CssBaseline />
+      <Body>
+        <RecipeSearchForm></RecipeSearchForm>
+        <ResultList></ResultList>
+      </Body>
     </React.Fragment>
   );
 };
 
-export default SearchPage;
+export default withRouter(SearchPage);
