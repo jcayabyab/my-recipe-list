@@ -3,7 +3,7 @@ import { TextField, Button, FormHelperText, Box } from "@material-ui/core";
 import styled from "styled-components";
 import { useTheme } from "@material-ui/core";
 
-const LoginButton = styled(Button)`
+const SearchButton = styled(Button)`
   margin: 0px 10px;
 `;
 
@@ -27,7 +27,7 @@ const RecipeSearchForm = ({ handleSearch }) => {
   const { palette } = useTheme();
 
   const formHasErrors = () => {
-    return userName.length === 0 || password.length === 0;
+    return false;
   };
 
   const handleSubmit = e => {
@@ -53,9 +53,9 @@ const RecipeSearchForm = ({ handleSearch }) => {
           {searchTerm}
         </TextFieldMargin>
       </Box>
-      <LoginButton color="secondary" type="submit" variant="contained">
+      <SearchButton color="secondary" type="submit" variant="contained">
         Search
-      </LoginButton>
+      </SearchButton>
     </Form>
   );
 };

@@ -18,7 +18,7 @@ const NavBar = () => {
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             MyRecipeList.com
           </Typography>
-          <Typography variant="p">
+          <Typography variant="body1">
             {user && `Hello, ${user.firstName}`}
           </Typography>
           <IconButton onClick={() => setDrawerIsOpen(true)} color="inherit">

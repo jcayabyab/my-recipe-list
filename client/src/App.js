@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import LandingPage from "./components/LandingPage/LandingPage";
 import HomePage from "./components/HomePage/HomePage";
-import SearchPage from "./components/SearchPage/SearchPage";
+import RecipeSearchPage from "./components/RecipeSearchPage/RecipeSearchPage";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@material-ui/core";
 import theme from "./contexts/MuiTheme";
@@ -35,10 +35,7 @@ const App = props => {
           <LandingPage></LandingPage>
         </RedirectRoute>
         <RedirectRoute condition={user === null} redirect="/" path="/home">
-          <HomePage></HomePage>
-        </RedirectRoute>
-        <RedirectRoute condition={user === null} redirect="/" path="/search">
-          <SearchPage></SearchPage>
+          <RecipeSearchPage></RecipeSearchPage>
         </RedirectRoute>
       </Switch>
     </ThemeProvider>

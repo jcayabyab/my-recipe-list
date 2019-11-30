@@ -4,10 +4,6 @@ import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
 import { useTheme } from "@material-ui/core";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
-import { LOGIN } from "../../contexts/types";
-import { UserContext } from "../../contexts/UserContext";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import RecipeSearchForm from "./RecipeSearchForm";
@@ -20,14 +16,6 @@ const Header = styled.div`
   font-weight: bold;
   color: white;
   border-bottom: ${({ palette }) => palette.secondary.main} 20px solid;
-`;
-
-const Title = styled.div`
-  font-size: 60px;
-`;
-
-const Subtitle = styled.div`
-  font-size: 30px;
 `;
 
 const Body = styled(Container)`
@@ -48,11 +36,22 @@ const FormField = styled.div`
   flex: 1;
 `;
 
-const SearchPage = props => {
-  const [, dispatchToUser] = React.useContext(UserContext);
-  const [incorrectPassword, setIncorrectPassword] = React.useState(false);
-  const [userNameExists, setUserNameExists] = React.useState(false);
+const fakeData = [
+  { name: "Tim", age: 40, country: "Canada" },
+  { name: "Brett", age: 35, country: "Canada" },
+  { name: "Mandingo", age: 50, country: "United States" },
+  { name: "Tom", age: 50, country: "United States" },
+  { name: "Flim", age: 50, country: "United States" },
+  { name: "Flam", age: 50, country: "United States" },
+  { name: "Navjot", age: 50, country: "United States" },
+  { name: "Minji", age: 50, country: "United States" },
+  { name: "Jofred", age: 50, country: "United States" },
+  { name: "Tyler Lam", age: 50, country: "United States" },
+  { name: "Barack", age: 50, country: "United States" },
+  { name: "Pam", age: 40, country: "Zimbabwe" }
+];
 
+const SearchPage = props => {
   const { palette } = useTheme();
 
   return (
@@ -60,7 +59,7 @@ const SearchPage = props => {
       <CssBaseline />
       <Body>
         <RecipeSearchForm></RecipeSearchForm>
-        <ResultList></ResultList>
+        <ResultList dataArr={fakeData} dataKey="name"></ResultList>
       </Body>
     </React.Fragment>
   );
