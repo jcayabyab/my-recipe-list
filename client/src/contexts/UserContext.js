@@ -1,25 +1,27 @@
-import React from "react";
+import React, { createContext, useReducer } from "react";
 import * as types from "./types";
+import ls from "local-storage";
 
-export const UserContext = React.createContext();
+export const UserContext = createContext();
 
-const initialState = {
-  user: null
-};
-
+const initialState = null;
 function reducer(state, action) {
-  switch(action.type) {
+  switch (action.type) {
     case types.LOGIN:
-      return {user: action.payload};
+      ls.set("user", action.payload);
+      return action.payload;
     case types.LOGOUT:
-      return {user: null};
+      ls.set("user", null);
+      return null;
     default:
       return state;
-  } 
-};
+  }
+}
 
 export function UserProvider(props) {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
-  const value = [ state, dispatch ];
-  return <UserContext.Provider value={value}>{props.children}</UserContext.Provider>;
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const value = [state, dispatch];
+  return (
+    <UserContext.Provider value={value}>{props.children}</UserContext.Provider>
+  );
 }

@@ -72,22 +72,16 @@ const LandingPage = props => {
     firstName,
     lastName,
     country,
-    profilePicture
+    profilePictureUrl
   ) => {
     try {
-      const formData = new FormData();
-
-      formData.append("userName", userName);
-      formData.append("password", password);
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("country", country);
-      formData.append("profilePicture", profilePicture);
-
-      const res = await axios.post("/api/login/create", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
+      const res = await axios.post("/api/login/create", {
+        userName,
+        password,
+        firstName,
+        lastName,
+        country,
+        profilePictureUrl
       });
 
       dispatchToUser({ type: LOGIN, payload: res.data });

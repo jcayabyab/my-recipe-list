@@ -29,8 +29,14 @@ module.exports = (app, connection) => {
   });
 
   app.post("/api/login/create", async (req, res) => {
-    const { userName, password, firstName, lastName, country } = req.fields;
-    const profilePictureUrl = null; // eventually upload to 3rd-party API
+    const {
+      userName,
+      password,
+      firstName,
+      lastName,
+      country,
+      profilePictureUrl
+    } = req.body;
 
     connection.query(
       `

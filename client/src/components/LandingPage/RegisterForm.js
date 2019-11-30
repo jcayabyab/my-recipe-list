@@ -2,7 +2,6 @@ import React from "react";
 import { TextField, Button, FormHelperText } from "@material-ui/core";
 import styled from "styled-components";
 import { useTheme } from "@material-ui/core";
-import Dropzone from "../../utils/Dropzone";
 
 const RegisterButton = styled(Button)`
   margin: 0px 10px;
@@ -25,7 +24,7 @@ const LoginForm = ({ handleRegister, usernameExists }) => {
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [country, setCountry] = React.useState("");
-  const [profilePictureFile, setProfilePictureFile] = React.useState(null);
+  const [profilePictureUrl, setProfilePictureUrl] = React.useState("");
   const [showErrors, setShowErrors] = React.useState(false);
 
   const { palette } = useTheme();
@@ -46,7 +45,7 @@ const LoginForm = ({ handleRegister, usernameExists }) => {
         firstName,
         lastName,
         country,
-        profilePictureFile
+        profilePictureUrl
       );
     }
   };
@@ -107,7 +106,13 @@ const LoginForm = ({ handleRegister, usernameExists }) => {
       >
         {country}
       </TextField>
-      <Dropzone uploadFile={binStr => setProfilePictureFile(binStr)}></Dropzone>
+      <TextField
+        label="Profile Picture URL"
+        variant="outlined"
+        onChange={e => setProfilePictureUrl(e.target.value)}
+      >
+        {profilePictureUrl}
+      </TextField>
       <RegisterButton color="secondary" type="submit" variant="contained">
         Register
       </RegisterButton>

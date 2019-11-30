@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
-const formidable = require("express-formidable"); // for multipart/form-data
 // require("./services/exampleService");
 
 const app = express();
@@ -17,7 +16,6 @@ connection.connect();
 
 // middlewares / services go here
 app.use(bodyParser.json());
-app.use(formidable());
 
 // routes go here
 require("./routes/loginRoutes")(app, connection);

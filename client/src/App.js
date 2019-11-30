@@ -1,30 +1,45 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import LandingPage from "./components/LandingPage/LandingPage";
 import HomePage from "./components/HomePage/HomePage";
 import SearchPage from "./components/SearchPage/SearchPage";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@material-ui/core";
 import theme from "./contexts/MuiTheme";
-import { Switch, Route, withRouter } from "react-router-dom";
-import PrivateRoute from "./utils/PrivateRoute";
+import { Switch, withRouter } from "react-router-dom";
+import RedirectRoute from "./utils/RedirectRoute";
 import { UserContext } from "./contexts/UserContext";
+import ls from "local-storage";
+import { LOGIN } from "./contexts/types";
 
 const App = props => {
-  const [ userState ] = useContext(UserContext);
+  const [user, dispatchToUser] = useContext(UserContext);
+
+  useEffect(() => {
+    // if nothing, check localstorage to see if user is saved
+    const userFromLocalStorage = ls.get("user");
+    if (userFromLocalStorage) {
+      dispatchToUser({ type: LOGIN, payload: userFromLocalStorage });
+    }
+  }, [dispatchToUser]);
 
   return (
     <ThemeProvider theme={theme}>
       {props.location.pathname !== "/" && <NavBar></NavBar>}
       <Switch>
-        <Route exact path="/">
+        <RedirectRoute
+          exact
+          path="/"
+          condition={user !== null}
+          redirect="/home"
+        >
           <LandingPage></LandingPage>
-        </Route>
-        <PrivateRoute user={userState.user} path="/home">
+        </RedirectRoute>
+        <RedirectRoute condition={user === null} redirect="/" path="/home">
           <HomePage></HomePage>
-        </PrivateRoute>
-        <PrivateRoute user={userState.user} path="/search">
+        </RedirectRoute>
+        <RedirectRoute condition={user === null} redirect="/" path="/search">
           <SearchPage></SearchPage>
-        </PrivateRoute>
+        </RedirectRoute>
       </Switch>
     </ThemeProvider>
   );
