@@ -21,13 +21,13 @@ const TextFieldMargin = styled(TextField)`
 `;
 
 const RecipeSearchForm = ({ handleSearch }) => {
-  const [searchTerm, setSearchTerm] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [showErrors, setShowErrors] = React.useState(false);
 
   const { palette } = useTheme();
 
   const formHasErrors = () => {
-    return false;
+    return username.length === 0;
   };
 
   const handleSubmit = e => {
@@ -36,7 +36,7 @@ const RecipeSearchForm = ({ handleSearch }) => {
     setShowErrors(true);
 
     if (!formHasErrors()) {
-      handleSearch(searchTerm);
+      handleSearch(setUsername);
     }
   };
 
@@ -44,11 +44,13 @@ const RecipeSearchForm = ({ handleSearch }) => {
     <Form noValidate onSubmit={handleSubmit}>
       <Box justifyContent="center" display="flex">
         <TextFieldMargin
-          label="Search Term"
+          label="Username"
           variant="outlined"
-          onChange={e => setSearchTerm(e.target.value)}
+          onChange={e => setUsername(e.target.value)}
+          error={showErrors}
+          helperText={showErrors && "Please enter a username."}
         >
-          {searchTerm}
+          {username}
         </TextFieldMargin>
       </Box>
       <SearchButton color="secondary" type="submit" variant="contained">

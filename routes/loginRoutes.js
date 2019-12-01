@@ -17,7 +17,7 @@ module.exports = (app, connection) => {
     `,
       (error, results, fields) => {
         if (error) {
-          console.log(error);
+          console.log("SQL exception occurred: " + error);
           return sendSQLError(res);
         }
         if (results.length !== 1) {
