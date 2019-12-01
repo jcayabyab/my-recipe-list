@@ -60,7 +60,7 @@ const LandingPage = props => {
       props.history.push("/home");
     } catch (err) {
       console.log(err.response.status);
-      if ((err.response.status = "401")) {
+      if (err.response.status === "401") {
         setIncorrectPassword(true);
       }
     }

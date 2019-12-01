@@ -7,18 +7,16 @@ const {
 module.exports = (app, connection) => {
   // all recipes
   app.get("/api/recipes", async (req, res) => {
-    connection.query(
-      `
+    try {
+      const [rows] = await connection.promise().query(`
       SELECT * FROM RECIPE;
-      `,
-      (error, results, fields) => {
-        if (error) {
-          console.log("SQL exception occurred: " + error);
-          return sendSQLError(res);
-        }
-        res.send(camelcaseKeys(results));
-      }
-    );
+      `);
+
+      res.send(camelcaseKeys(rows));
+    } catch (error) {
+      console.log("SQL exception occurred: " + error);
+      return sendSQLError(res);
+    }
   });
 
   app.post("/api/recipes/search", async (req, res) => {
@@ -32,13 +30,13 @@ module.exports = (app, connection) => {
       kitchenItems
     );
 
-    connection.query(query, (error, results, fields) => {
-      if (error) {
-        console.log("SQL exception occurred: " + error);
-        return sendSQLError(res);
-      }
+    try {
+      const [rows] = await connection.promise().query(query);
       res.send(camelcaseKeys(results));
-    });
+    } catch (error) {
+      console.log("SQL exception occurred: " + error);
+      return sendSQLError(res);
+    }
   });
 
   app.post("/api/recipe/delete", async (req, res) => {
@@ -48,13 +46,14 @@ module.exports = (app, connection) => {
         DELETE FROM RECIPE
         WHERE RecipeName=${connection.escape(recipeName)}
        `;
+    try {
+      const [rows] = connection.promise().query(query);
 
-    connection.query(query, (error, results, fields) => {
-      if (error) {
-        console.log("SQL exception occurred: " + error);
-        return sendSQLError(res);
-      }
-    });
+      console.log[rows];
+    } catch (error) {
+      console.log("SQL exception occurred: " + error);
+      return sendSQLError(res);
+    }
   });
 };
 

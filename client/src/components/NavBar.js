@@ -19,7 +19,7 @@ const NavBar = () => {
             MyRecipeList.com
           </Typography>
           <Typography variant="body1">
-            {user && `Hello, ${user.firstName}`}
+            {user && `Hello, ${user.firstName || user.userName}`}
           </Typography>
           <IconButton onClick={() => setDrawerIsOpen(true)} color="inherit">
             <MenuIcon />

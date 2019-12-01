@@ -15,8 +15,12 @@ const Form = styled.form`
   flex: 1;
 `;
 
+const FieldsWrapper = styled(Box)`
+  margin: 10px 0px 20px;
+`;
+
 const TextFieldMargin = styled(TextField)`
-  margin: 10px 10px 20px 10px !important;
+  margin: 0px 10px !important;
   flex: 1;
 `;
 
@@ -43,7 +47,7 @@ const LoginForm = ({ handleLogin, incorrect }) => {
 
   return (
     <Form noValidate onSubmit={handleSubmit}>
-      <Box justifyContent="center" display="flex">
+      <FieldsWrapper justifyContent="center" display="flex">
         <TextFieldMargin
           label="Username"
           variant="outlined"
@@ -56,26 +60,30 @@ const LoginForm = ({ handleLogin, incorrect }) => {
         >
           {userName}
         </TextFieldMargin>
-        <TextFieldMargin
-          label="Password"
-          hidden
-          variant="outlined"
-          onChange={e => setPassword(e.target.value)}
-          type="password"
-          autoComplete="password"
-          error={showErrors && password.length === 0}
-          helperText={
-            showErrors && password.length === 0 && "Please enter a password.\n"
-          }
-        >
-          {password}
-        </TextFieldMargin>
-        {incorrect && (
-          <FormHelperText style={{ color: palette.error.main }}>
-            Incorrect password. Please try again.
-          </FormHelperText>
-        )}
-      </Box>
+        <div>
+          <TextFieldMargin
+            label="Password"
+            hidden
+            variant="outlined"
+            onChange={e => setPassword(e.target.value)}
+            type="password"
+            autoComplete="password"
+            error={showErrors && password.length === 0}
+            helperText={
+              showErrors &&
+              password.length === 0 &&
+              "Please enter a password.\n"
+            }
+          >
+            {password}
+          </TextFieldMargin>
+          {incorrect && (
+            <FormHelperText style={{ color: palette.error.main }}>
+              Incorrect password. Please try again.
+            </FormHelperText>
+          )}
+        </div>
+      </FieldsWrapper>
       <LoginButton color="secondary" type="submit" variant="contained">
         Login
       </LoginButton>

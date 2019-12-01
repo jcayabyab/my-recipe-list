@@ -9,23 +9,23 @@ const {
 module.exports = (app, connection) => {
   app.get("/api/login", async (req, res) => {
     const { username, password } = req.query;
-    connection.query(
+    try {
+      const [rows] = await connection.promise().query(
+        `
+        SELECT * FROM USER
+        WHERE UserName=${connection.escape(username)}
+        AND Password=${connection.escape(password)}
       `
-      SELECT * FROM USER
-      WHERE UserName=${connection.escape(username)}
-      AND Password=${connection.escape(password)}
-    `,
-      (error, results, fields) => {
-        if (error) {
-          console.log("SQL exception occurred: " + error);
-          return sendSQLError(res);
-        }
-        if (results.length !== 1) {
-          return sendFailedLogin(res);
-        }
-        res.send(camelcaseKeys(results[0]));
+      );
+      if (rows.length !== 1) {
+        return sendFailedLogin(res);
       }
-    );
+
+      res.send(camelcaseKeys(rows[0]));
+    } catch (error) {
+      console.log("SQL exception occurred: " + error);
+      return sendSQLError(res);
+    }
   });
 
   app.post("/api/login/create", async (req, res) => {
@@ -38,49 +38,47 @@ module.exports = (app, connection) => {
       profilePictureUrl
     } = req.body;
 
-    connection.query(
-      `
-      INSERT INTO USER
-      VALUES
-      (
-        ${connection.escape(userName)},
-        ${connection.escape(password)},
-        ${connection.escape(firstName)},
-        ${connection.escape(lastName)},
-        ${connection.escape(profilePictureUrl)},
-        ${connection.escape(country)}
-      )
-      `,
-      (error, results, fields) => {
-        if (error) {
-          console.log(error.sqlMessage);
-          if (error.code === "ER_DUP_ENTRY") {
-            return sendUsernameExists(res);
-          }
-          return sendSQLError(500);
-        }
-        if (results.affectedRows !== 1) {
-          // failed registration (or extra registration?)
-          console.log(
-            "Less than or more than 1 row was affected during registration"
-          );
-          return sendGenericError(
-            "Less than or more than 1 row was affected during registration."
-          );
-        }
-        connection.query(
-          `
-          SELECT * FROM USER 
-          WHERE UserName=${connection.escape(userName)} 
-        `,
-          (innerError, innerResults, innerFields) => {
-            if (innerError) {
-              return sendSQLError(res);
-            }
-            res.send(camelcaseKeys(innerResults[0]));
-          }
+    // register new user
+    try {
+      const [insertRows] = await connection.promise().query(`
+        INSERT INTO USER
+        VALUES
+        (
+          ${connection.escape(userName)},
+          ${connection.escape(password)},
+          ${connection.escape(firstName)},
+          ${connection.escape(lastName)},
+          ${connection.escape(profilePictureUrl)},
+          ${connection.escape(country)}
+        )
+      `);
+
+      if (insertRows.affectedRows !== 1) {
+        // failed registration (or extra registration?)
+        console.log(
+          "Less than or more than 1 row was affected during registration."
+        );
+        return sendGenericError(
+          "Less than or more than 1 row was affected during registration."
         );
       }
-    );
+
+      const [userRows] = await connection.promise().query(
+        `
+          SELECT * FROM USER 
+          WHERE UserName=${connection.escape(userName)}
+        `
+      );
+
+      console.log(userRows);
+
+      res.send(camelcaseKeys(userRows[0]));
+    } catch (error) {
+      if (error.code === "ER_DUP_ENTRY") {
+        return sendUsernameExists(res);
+      }
+      console.log("SQL exception occurred: " + error);
+      return sendSQLError(res);
+    }
   });
 };
