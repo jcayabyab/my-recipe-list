@@ -40,6 +40,22 @@ module.exports = (app, connection) => {
       res.send(camelcaseKeys(results));
     });
   });
+
+  app.post("/api/recipe/delete", async (req, res) => {
+    const { recipeName } = req.body;
+
+    let query = `
+        DELETE FROM RECIPE
+        WHERE RecipeName=${connection.escape(recipeName)}
+       `;
+
+    connection.query(query, (error, results, fields) => {
+      if (error) {
+        console.log("SQL exception occurred: " + error);
+        return sendSQLError(res);
+      }
+    });
+  });
 };
 
 /**
