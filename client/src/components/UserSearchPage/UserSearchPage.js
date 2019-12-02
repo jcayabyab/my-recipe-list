@@ -35,7 +35,7 @@ const SearchPage = props => {
   }, [setUsers]);
 
   const handleTableClick = username => {
-    props.history.push(`/profiles/${username}`);
+    props.history.push(`/user/${username}`);
   };
 
   // this should be iterable

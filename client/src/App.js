@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react";
 import LandingPage from "./components/LandingPage/LandingPage";
 import HomePage from "./components/HomePage/HomePage";
 import RecipeSearchPage from "./components/RecipeSearchPage/RecipeSearchPage";
+import UserProfilePage from "./components/UserProfilePage/UserProfilePage";
+import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@material-ui/core";
 import theme from "./contexts/MuiTheme";
@@ -10,7 +12,6 @@ import RedirectRoute from "./utils/RedirectRoute";
 import { UserContext } from "./contexts/UserContext";
 import ls from "local-storage";
 import { LOGIN } from "./contexts/types";
-import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 
 const App = props => {
   const [user, dispatchToUser] = useContext(UserContext);
@@ -35,10 +36,27 @@ const App = props => {
         >
           <LandingPage></LandingPage>
         </RedirectRoute>
-        <RedirectRoute condition={user === null} redirect="/" path="/home">
+        <RedirectRoute
+          exact
+          condition={user === null}
+          redirect="/"
+          path="/home"
+        >
           <RecipeSearchPage></RecipeSearchPage>
         </RedirectRoute>
-        <RedirectRoute condition={user === null} redirect="/" path="/profiles">
+        <RedirectRoute
+          condition={user === null}
+          redirect="/"
+          path="/user/:id"
+        >
+          <UserProfilePage></UserProfilePage>
+        </RedirectRoute>
+        <RedirectRoute
+          exact
+          condition={user === null}
+          redirect="/"
+          path="/profiles"
+        >
           <UserSearchPage></UserSearchPage>
         </RedirectRoute>
       </Switch>
