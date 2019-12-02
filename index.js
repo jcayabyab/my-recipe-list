@@ -20,6 +20,9 @@ app.use(bodyParser.json());
 // routes go here
 require("./routes/loginRoutes")(app, connection);
 require("./routes/recipeRoutes")(app, connection);
+require("./routes/reviewRoutes")(app, connection);
+require("./routes/userRoutes")(app, connection);
+require("./routes/listRoutes")(app, connection);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

@@ -3,7 +3,7 @@ const {
   sendSQLError,
   sendUsernameExists,
   sendFailedLogin,
-  sendGenericError
+  sendNotOneUpdateError
 } = require("../utils/sendErrorFunctions");
 
 module.exports = (app, connection) => {
@@ -55,12 +55,7 @@ module.exports = (app, connection) => {
 
       if (insertRows.affectedRows !== 1) {
         // failed registration (or extra registration?)
-        console.log(
-          "Less than or more than 1 row was affected during registration."
-        );
-        return sendGenericError(
-          "Less than or more than 1 row was affected during registration."
-        );
+        return sendNotOneUpdateError(res);
       }
 
       const [userRows] = await connection.promise().query(
@@ -69,8 +64,6 @@ module.exports = (app, connection) => {
           WHERE UserName=${connection.escape(userName)}
         `
       );
-
-      console.log(userRows);
 
       res.send(camelcaseKeys(userRows[0]));
     } catch (error) {
