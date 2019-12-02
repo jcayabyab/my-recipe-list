@@ -2,7 +2,14 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { CssBaseline, Container, Avatar } from "@material-ui/core";
+import {
+  CssBaseline,
+  Container,
+  Avatar,
+  Box,
+  Typography,
+  Button
+} from "@material-ui/core";
 import styled from "styled-components";
 
 const Body = styled(Container)`
@@ -10,8 +17,18 @@ const Body = styled(Container)`
 `;
 
 const BigAvatar = styled(Avatar)`
-  width: 100px !important;
-  height: 100px !important;
+  width: 250px !important;
+  height: 250px !important;
+`;
+
+const Row = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & > * {
+    margin: 0px 10px;
+  }
 `;
 
 const UserProfilePage = ({ location }) => {
@@ -54,11 +71,16 @@ const UserProfilePage = ({ location }) => {
   return profileUser ? (
     <React.Fragment>
       <CssBaseline></CssBaseline>
-      <Body>{profileUser.country}</Body>
-      <BigAvatar
-        alt="bunny"
-        src="https://thumbs-prod.si-cdn.com/PT-enupw3YGzvb_SHpFOxkWUI_M=/800x600/filters:no_upscale()/https://public-media.si-cdn.com/filer/70/e0/70e0989e-646e-4537-ae8e-7bbf863db2fd/ebjj1g.jpg"
-      ></BigAvatar>
+      <Body>
+        <Row>
+          <BigAvatar
+            alt="bunny"
+            src={profileUser.profilePictureUrl}
+          ></BigAvatar>
+          <h6>{profileUser.country}</h6>
+          <Button variant="contained" color="primary">Press me please</Button>
+        </Row>
+      </Body>
     </React.Fragment>
   ) : (
     <div>Loading...</div>
