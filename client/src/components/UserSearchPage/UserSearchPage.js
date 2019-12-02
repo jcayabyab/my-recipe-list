@@ -48,8 +48,9 @@ const SearchPage = props => {
       key={user.userName}
     >
       <TableCell align="right">{user.userName}</TableCell>
-      <TableCell align="right">{user.firstName}</TableCell>
-      <TableCell align="right">{user.lastName}</TableCell>
+      <TableCell align="right">
+        {user.firstName + " " + user.lastName}
+      </TableCell>
       <TableCell align="right">{user.country}</TableCell>
     </TableRowLink>
   );
@@ -58,8 +59,7 @@ const SearchPage = props => {
     <TableHead>
       <TableRow>
         <TableCell align="right">Username</TableCell>
-        <TableCell align="right">First Name</TableCell>
-        <TableCell align="right">Last Name</TableCell>
+        <TableCell align="right">Name</TableCell>
         <TableCell align="right">Country</TableCell>
       </TableRow>
     </TableHead>
@@ -69,7 +69,7 @@ const SearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <UserSearchForm></UserSearchForm>
+        <UserSearchForm handleSearch={handleSearch}></UserSearchForm>
         {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
         <ResultList
           dataArr={users}
