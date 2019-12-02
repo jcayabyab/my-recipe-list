@@ -18,50 +18,20 @@ const TableRowLink = styled(TableRow)`
   }
 `;
 
-const fakeData = [
-  {
-    userName: "mike",
-    firstName: "Mike",
-    lastName: "Oxlong",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "jenna",
-    firstName: "Jenna",
-    lastName: "Tillius",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "gabe",
-    firstName: "Gabe",
-    lastName: "Itches",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "hugh",
-    firstName: "Hugh",
-    lastName: "Mungus",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "anita",
-    firstName: "Anita",
-    lastName: "Blackhawk",
-    country: "Canada",
-    profilePictureUrl: ""
-  }
-];
-
 const SearchPage = props => {
   const [users, setUsers] = useState([]);
   const { palette } = useTheme();
 
+  const handleSearch = async searchTerm => {
+    const { data: users } = await axios.get("/api/profiles", {
+      params: { searchTerm }
+    });
+    console.log(users);
+    setUsers(users);
+  };
+
   useEffect(() => {
-    setUsers(fakeData);
+    handleSearch("");
   }, [setUsers]);
 
   const handleTableClick = username => {

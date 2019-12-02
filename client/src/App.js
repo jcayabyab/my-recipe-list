@@ -10,6 +10,7 @@ import RedirectRoute from "./utils/RedirectRoute";
 import { UserContext } from "./contexts/UserContext";
 import ls from "local-storage";
 import { LOGIN } from "./contexts/types";
+import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 
 const App = props => {
   const [user, dispatchToUser] = useContext(UserContext);
@@ -36,6 +37,9 @@ const App = props => {
         </RedirectRoute>
         <RedirectRoute condition={user === null} redirect="/" path="/home">
           <RecipeSearchPage></RecipeSearchPage>
+        </RedirectRoute>
+        <RedirectRoute condition={user === null} redirect="/" path="/profiles">
+          <UserSearchPage></UserSearchPage>
         </RedirectRoute>
       </Switch>
     </ThemeProvider>
