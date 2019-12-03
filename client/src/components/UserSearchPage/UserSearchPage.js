@@ -3,10 +3,22 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import { useTheme, TableHead, TableCell, TableRow } from "@material-ui/core";
+import {
+  useTheme,
+  TableHead,
+  TableCell,
+  TableRow,
+  Box,
+  Typography
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import UserSearchForm from "./UserSearchForm";
+
+const StyledTableHeaderCell = styled(TableCell)`
+  background-color: ${({ palette }) => palette.primary.main} !important;
+  color: ${({ palette }) => palette.common.white} !important;
+`;
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -35,7 +47,7 @@ const SearchPage = props => {
   }, [setUsers]);
 
   const handleTableClick = username => {
-    props.history.push(`/profiles/${username}`);
+    props.history.push(`/user/${username}`);
   };
 
   // this should be iterable
@@ -56,11 +68,17 @@ const SearchPage = props => {
   );
 
   const renderTableHeader = () => (
-    <TableHead>
+    <TableHead color="primary">
       <TableRow>
-        <TableCell align="right">Username</TableCell>
-        <TableCell align="right">Name</TableCell>
-        <TableCell align="right">Country</TableCell>
+        <StyledTableHeaderCell palette={palette} align="right">
+          Username
+        </StyledTableHeaderCell>
+        <StyledTableHeaderCell palette={palette} align="right">
+          Name
+        </StyledTableHeaderCell>
+        <StyledTableHeaderCell palette={palette} align="right">
+          Country
+        </StyledTableHeaderCell>
       </TableRow>
     </TableHead>
   );
@@ -69,8 +87,10 @@ const SearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <UserSearchForm handleSearch={handleSearch}></UserSearchForm>
-        {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Users</Typography>
+          <UserSearchForm handleSearch={handleSearch}></UserSearchForm>
+        </Box>
         <ResultList
           dataArr={users}
           renderTableRow={renderTableRow}
