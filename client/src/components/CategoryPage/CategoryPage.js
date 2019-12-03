@@ -28,6 +28,7 @@ const Banner = styled(Paper)`
   margin-bottom: 10px;
   background-image: url("${({ pictureUrl }) => pictureUrl}");
   background-size: cover;
+  background-position: center;
   color: white;
   letter-spacing: 0.05em;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
