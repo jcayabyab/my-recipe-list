@@ -14,11 +14,7 @@ import {
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import UserSearchForm from "./UserSearchForm";
-
-const StyledTableHeaderCell = styled(TableCell)`
-  background-color: ${({ palette }) => palette.primary.main} !important;
-  color: ${({ palette }) => palette.common.white} !important;
-`;
+import TableHeaderCell from "../TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -70,15 +66,15 @@ const SearchPage = props => {
   const renderTableHeader = () => (
     <TableHead color="primary">
       <TableRow>
-        <StyledTableHeaderCell palette={palette} align="right">
+        <TableHeaderCell palette={palette} align="right">
           Username
-        </StyledTableHeaderCell>
-        <StyledTableHeaderCell palette={palette} align="right">
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
           Name
-        </StyledTableHeaderCell>
-        <StyledTableHeaderCell palette={palette} align="right">
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
           Country
-        </StyledTableHeaderCell>
+        </TableHeaderCell>
       </TableRow>
     </TableHead>
   );
