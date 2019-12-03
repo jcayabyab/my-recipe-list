@@ -5,6 +5,7 @@ const {
   sendNotFoundError,
   sendNotOneUpdateError
 } = require("../utils/sendErrorFunctions");
+const toSqlDateTime = require("../utils/toSqlDateTime")
 
 module.exports = (app, connection) => {
   // create list if not exists
@@ -17,7 +18,7 @@ module.exports = (app, connection) => {
       `;
 
     try {
-      const [rows] = await connection.promise().query(query);
+      let [rows] = await connection.promise().query(query);
 
       if (rows.length === 0) {
         const insertQuery = `
@@ -25,7 +26,7 @@ module.exports = (app, connection) => {
           (
             ${connection.escape(userName)},
             ${connection.escape(`${userName}'s list`)},
-            ${connection.escape(Date.now())}
+            ${connection.escape(toSqlDateTime(new Date()))}
           )
         `;
 
@@ -66,6 +67,7 @@ module.exports = (app, connection) => {
       console.log(listData);
       res.send(listData[0]);
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
