@@ -23,7 +23,7 @@ const Banner = styled(Paper)`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  height: 100px;
+  height: 150px;
   padding: 20px;
   margin-bottom: 10px;
   background-image: url("${({ pictureUrl }) => pictureUrl}");
