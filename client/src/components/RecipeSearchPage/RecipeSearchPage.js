@@ -33,7 +33,6 @@ const RecipeSearchPage = props => {
   useEffect(() => {
     const getAllRecipes = async () => {
       const { data: recipes } = await axios.get("/api/recipes");
-      console.log(recipes);
       setRecipes(recipes);
     };
     getAllRecipes();
