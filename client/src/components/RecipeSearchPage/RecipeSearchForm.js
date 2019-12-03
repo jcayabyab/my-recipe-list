@@ -9,14 +9,15 @@ const SearchButton = styled(Button)`
 
 const Form = styled.form`
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   flex: 1;
+  margin-bottom: 20px;
 `;
 
 const TextFieldMargin = styled(TextField)`
-  margin: 10px 10px 20px 10px !important;
+  margin: 0px 10px !important;
   flex: 1;
 `;
 

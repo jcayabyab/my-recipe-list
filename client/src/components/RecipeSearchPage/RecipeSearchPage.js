@@ -3,7 +3,14 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import { useTheme, TableHead, TableCell, TableRow } from "@material-ui/core";
+import {
+  useTheme,
+  TableHead,
+  TableCell,
+  TableRow,
+  Typography,
+  Box
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import RecipeSearchForm from "./RecipeSearchForm";
@@ -34,7 +41,7 @@ const SearchPage = props => {
 
   const handleSearch = async (recipeName, ingredients, kitchenItems) => {
     const { data: recipes } = await axios.post("/api/recipes/search", {
-      recipeName,
+      searchQuery: recipeName,
       ingredients: [],
       kitchenItems: []
     });
@@ -64,8 +71,12 @@ const SearchPage = props => {
   const renderTableHeader = () => (
     <TableHead>
       <TableRow>
-        <TableHeaderCell palette={palette} align="right">Recipe Name</TableHeaderCell>
-        <TableHeaderCell palette={palette} align="right">Description</TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
+          Recipe Name
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
+          Description
+        </TableHeaderCell>
       </TableRow>
     </TableHead>
   );
@@ -74,8 +85,10 @@ const SearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
-        {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Recipes</Typography>
+          <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
+        </Box>
         <ResultList
           dataArr={recipes}
           renderTableRow={renderTableRow}
