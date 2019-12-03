@@ -1,9 +1,6 @@
 const camelcaseKeys = require("camelcase-keys");
 const {
   sendSQLError,
-  sendGenericError,
-  sendNotFoundError,
-  sendNotOneUpdateError
 } = require("../utils/sendErrorFunctions");
 
 module.exports = (app, connection) => {
