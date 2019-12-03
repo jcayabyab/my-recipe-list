@@ -11,11 +11,12 @@ module.exports = (app, connection) => {
     const query = `SELECT * FROM CATEGORY`;
 
     try {
-      const [rows] = connection.promise().query(query);
+      const [rows] = await connection.promise().query(query);
 
       // { categoryName, description, pictureUrl }
-      return camelcaseKeys(rows);
+      res.send(camelcaseKeys(rows));
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
