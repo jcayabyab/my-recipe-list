@@ -3,10 +3,18 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import { useTheme, TableHead, TableCell, TableRow } from "@material-ui/core";
+import {
+  useTheme,
+  TableHead,
+  TableCell,
+  TableRow,
+  Typography,
+  Box
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import RecipeSearchForm from "./RecipeSearchForm";
+import TableHeaderCell from "../TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -17,34 +25,6 @@ const TableRowLink = styled(TableRow)`
     cursor: pointer;
   }
 `;
-
-const fakeData = [
-  {
-    recipeId: 1,
-    name: "Sausages",
-    description: "delicious sausages",
-    pictureUrl: ""
-  },
-  {
-    recipeId: 2,
-    name: "Water",
-    description: "refreshing water",
-    pictureUrl: ""
-  },
-  {
-    recipeId: 3,
-    name: "Casserole",
-    description: "Delicious and tasty",
-    pictureUrl: ""
-  },
-  { recipeId: 4, name: "Sriracha", description: "Hot!", pictureUrl: "" },
-  {
-    recipeId: 5,
-    name: "Fruit salad",
-    description: "fruity just for you",
-    pictureUrl: ""
-  }
-];
 
 const SearchPage = props => {
   const [recipes, setRecipes] = useState([]);
@@ -61,7 +41,7 @@ const SearchPage = props => {
 
   const handleSearch = async (recipeName, ingredients, kitchenItems) => {
     const { data: recipes } = await axios.post("/api/recipes/search", {
-      recipeName,
+      searchQuery: recipeName,
       ingredients: [],
       kitchenItems: []
     });
@@ -91,8 +71,12 @@ const SearchPage = props => {
   const renderTableHeader = () => (
     <TableHead>
       <TableRow>
-        <TableCell align="right">Recipe Name</TableCell>
-        <TableCell align="right">Description</TableCell>
+        <TableHeaderCell palette={palette} align="right">
+          Recipe Name
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
+          Description
+        </TableHeaderCell>
       </TableRow>
     </TableHead>
   );
@@ -101,8 +85,10 @@ const SearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
-        {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Recipes</Typography>
+          <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
+        </Box>
         <ResultList
           dataArr={recipes}
           renderTableRow={renderTableRow}

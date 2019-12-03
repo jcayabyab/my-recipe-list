@@ -13,7 +13,7 @@ const NavBar = () => {
 
   return (
     <React.Fragment>
-      <AppBar position="sticky" color="secondary">
+      <AppBar position="sticky" color="primary">
         <Toolbar style={{ justifyContent: "flex-end" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
             MyRecipeList.com

@@ -3,10 +3,18 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import { useTheme, TableHead, TableCell, TableRow } from "@material-ui/core";
+import {
+  useTheme,
+  TableHead,
+  TableCell,
+  TableRow,
+  Box,
+  Typography
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import UserSearchForm from "./UserSearchForm";
+import TableHeaderCell from "../TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -18,54 +26,24 @@ const TableRowLink = styled(TableRow)`
   }
 `;
 
-const fakeData = [
-  {
-    userName: "mike",
-    firstName: "Mike",
-    lastName: "Oxlong",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "jenna",
-    firstName: "Jenna",
-    lastName: "Tillius",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "gabe",
-    firstName: "Gabe",
-    lastName: "Itches",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "hugh",
-    firstName: "Hugh",
-    lastName: "Mungus",
-    country: "Canada",
-    profilePictureUrl: ""
-  },
-  {
-    userName: "anita",
-    firstName: "Anita",
-    lastName: "Blackhawk",
-    country: "Canada",
-    profilePictureUrl: ""
-  }
-];
-
 const SearchPage = props => {
   const [users, setUsers] = useState([]);
   const { palette } = useTheme();
 
+  const handleSearch = async searchTerm => {
+    const { data: users } = await axios.get("/api/profiles", {
+      params: { searchTerm }
+    });
+    console.log(users);
+    setUsers(users);
+  };
+
   useEffect(() => {
-    setUsers(fakeData);
+    handleSearch("");
   }, [setUsers]);
 
   const handleTableClick = username => {
-    props.history.push(`/profiles/${username}`);
+    props.history.push(`/user/${username}`);
   };
 
   // this should be iterable
@@ -78,19 +56,25 @@ const SearchPage = props => {
       key={user.userName}
     >
       <TableCell align="right">{user.userName}</TableCell>
-      <TableCell align="right">{user.firstName}</TableCell>
-      <TableCell align="right">{user.lastName}</TableCell>
+      <TableCell align="right">
+        {user.firstName + " " + user.lastName}
+      </TableCell>
       <TableCell align="right">{user.country}</TableCell>
     </TableRowLink>
   );
 
   const renderTableHeader = () => (
-    <TableHead>
+    <TableHead color="primary">
       <TableRow>
-        <TableCell align="right">Username</TableCell>
-        <TableCell align="right">First Name</TableCell>
-        <TableCell align="right">Last Name</TableCell>
-        <TableCell align="right">Country</TableCell>
+        <TableHeaderCell palette={palette} align="right">
+          Username
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
+          Name
+        </TableHeaderCell>
+        <TableHeaderCell palette={palette} align="right">
+          Country
+        </TableHeaderCell>
       </TableRow>
     </TableHead>
   );
@@ -99,8 +83,10 @@ const SearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <UserSearchForm></UserSearchForm>
-        {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Typography variant="h4">Users</Typography>
+          <UserSearchForm handleSearch={handleSearch}></UserSearchForm>
+        </Box>
         <ResultList
           dataArr={users}
           renderTableRow={renderTableRow}

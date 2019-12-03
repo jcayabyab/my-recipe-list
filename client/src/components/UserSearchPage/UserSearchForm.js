@@ -9,25 +9,26 @@ const SearchButton = styled(Button)`
 
 const Form = styled.form`
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
   flex: 1;
+  margin-bottom: 20px;
 `;
 
 const TextFieldMargin = styled(TextField)`
-  margin: 10px 10px 20px 10px !important;
+  margin: 0px 10px !important;
   flex: 1;
 `;
 
 const RecipeSearchForm = ({ handleSearch }) => {
-  const [username, setUsername] = React.useState("");
+  const [userName, setUsername] = React.useState("");
   const [showErrors, setShowErrors] = React.useState(false);
 
   const { palette } = useTheme();
 
   const formHasErrors = () => {
-    return username.length === 0;
+    return false;
   };
 
   const handleSubmit = e => {
@@ -36,7 +37,7 @@ const RecipeSearchForm = ({ handleSearch }) => {
     setShowErrors(true);
 
     if (!formHasErrors()) {
-      handleSearch(setUsername);
+      handleSearch(userName);
     }
   };
 
@@ -47,10 +48,8 @@ const RecipeSearchForm = ({ handleSearch }) => {
           label="Username"
           variant="outlined"
           onChange={e => setUsername(e.target.value)}
-          error={showErrors}
-          helperText={showErrors && "Please enter a username."}
         >
-          {username}
+          {userName}
         </TextFieldMargin>
       </Box>
       <SearchButton color="secondary" type="submit" variant="contained">
