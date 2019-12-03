@@ -21,6 +21,7 @@ module.exports = (app, connection) => {
 
       res.send(camelcaseKeys(rows));
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });

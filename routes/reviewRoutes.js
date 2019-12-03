@@ -5,6 +5,7 @@ const {
   sendNotFoundError,
   sendNotOneUpdateError
 } = require("../utils/sendErrorFunctions");
+const toSqlDateTime = require("../utils/toSqlDateTime");
 
 module.exports = (app, connection) => {
   app.get("/api/reviews", async (req, res) => {
@@ -61,7 +62,7 @@ module.exports = (app, connection) => {
         ${connection.escape(userName)},
         ${connection.escape(recipeId)},
         ${connection.escape(reviewId)},
-        ${connection.escape(Date.now())}
+        ${connection.escape(toSqlDateTime(new Date()))}
       )
       `;
 
