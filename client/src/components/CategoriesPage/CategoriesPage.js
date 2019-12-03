@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import { useTheme, TableHead, TableCell, TableRow } from "@material-ui/core";
+import {
+  useTheme,
+  Container,
+  CssBaseline,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Button,
+  Typography
+} from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import ResultList from "../../utils/ResultList";
-import RecipeSearchForm from "./RecipeSearchForm";
 
 const Body = styled(Container)`
   padding: 20px 0px;
 `;
 
-const CategoriesPage = props => {
+const Categories = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  margin: 10px 0px;
+`;
+
+const CategoriesPage = ({ history }) => {
   const [categories, setCategories] = useState([]);
   const { palette } = useTheme();
 
@@ -24,41 +37,45 @@ const CategoriesPage = props => {
     getAllRecipes();
   }, [setCategories]);
 
+  const gotoCategory = categoryName => {
+    history.push("/category/" + categoryName);
+  };
+
   // this should be iterable
-  const renderTableRow = recipe => (
-    <TableRowLink
-      hover
-      onClick={() => handleTableClick(recipe.recipeId)}
-      role="checkbox"
-      tabIndex={-1}
-      key={recipe.recipeId}
-    >
-      <TableCell align="right">{recipe.name}</TableCell>
-      <TableCell align="right">{recipe.description}</TableCell>
-    </TableRowLink>
+  const renderCategories = () => (
+    <Body>
+      <Typography variant="h4">Categories</Typography>
+      <Categories>
+        {categories.map(({ categoryName, description, pictureUrl }) => (
+          <Card
+            key={categoryName}
+            style={{ margin: "10px" }}
+            onClick={() => gotoCategory(categoryName)}
+          >
+            <CardActionArea>
+              <CardMedia
+                image={pictureUrl}
+                title={categoryName}
+                style={{ height: "150px" }}
+              ></CardMedia>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {categoryName}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {description}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
+      </Categories>
+    </Body>
   );
-
-  const renderTableHeader = () => (
-    <TableHead>
-      <TableRow>
-        <TableCell align="right">Recipe Name</TableCell>
-        <TableCell align="right">Description</TableCell>
-      </TableRow>
-    </TableHead>
-  );
-
   return (
     <React.Fragment>
       <CssBaseline />
-      <Body>
-        <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
-        {/* <ResultListAuto dataArr={fakeData} dataKey="name"></ResultListAuto> */}
-        <ResultList
-          dataArr={categories}
-          renderTableRow={renderTableRow}
-          renderTableHeader={renderTableHeader}
-        ></ResultList>
-      </Body>
+      {renderCategories()}
     </React.Fragment>
   );
 };
