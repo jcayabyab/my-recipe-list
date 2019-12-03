@@ -33,6 +33,6 @@
     "express": "^4.16.4",
     "mysql2": "^2.0.1",
     "nodemon": "^1.18.9",
-    "react-tag-autocomplete": "^5.11.2"
+    "react-select": "^3.0.8"
   }
 }

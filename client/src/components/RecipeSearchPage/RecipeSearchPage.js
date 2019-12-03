@@ -42,8 +42,8 @@ const RecipeSearchPage = props => {
   const handleSearch = async (recipeName, ingredients, kitchenItems) => {
     const { data: recipes } = await axios.post("/api/recipes/search", {
       searchQuery: recipeName,
-      ingredients: [],
-      kitchenItems: []
+      ingredients,
+      kitchenItems
     });
 
     console.log(recipes);
