@@ -34,73 +34,71 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
       onKeyDown={() => setDrawerIsOpen(false)}
       onClick={() => setDrawerIsOpen(false)}
     >
-      <div>
-        <List>
-          {[
-            {
-              label: "Search Recipes",
-              icon: <KitchenIcon></KitchenIcon>,
-              route: "/home"
-            },
-            {
-              label: "Browse recipes by category",
-              icon: <ClassIcon></ClassIcon>,
-              route: "/category"
-            },
-            {
-              label: "Add a new recipe",
-              icon: <PostAddIcon></PostAddIcon>,
-              route: "/recipe/new"
-            },
-            {
-              label: "View my list",
-              icon: <ListIcon></ListIcon>,
-              route: `/profiles/${userName}/list`
-            },
-            {
-              label: "View kitchen items",
-              icon: <LocalDiningIcon></LocalDiningIcon>,
-              route: "/items"
-            },
-            {
-              label: "Search profiles",
-              icon: <EmojiPeopleIcon></EmojiPeopleIcon>,
-              route: "/profiles"
-            },
-            {
-              label: "My Account",
-              icon: <AccountCircleIcon></AccountCircleIcon>,
-              route: `/profiles/${userName}`
-            }
-          ].map(entry => (
-            <Link
-              to={entry.route}
-              key={entry.label}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem button>
-                <ListItemIcon>{entry.icon}</ListItemIcon>
-                <ListItemText primary={entry.label}></ListItemText>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-        <Divider></Divider>
-        <List>
-          <ListItem
-            button
-            onClick={() => {
-              console.log("Here");
-              dispatchToUser({ type: LOGOUT });
-            }}
+      <List>
+        {[
+          {
+            label: "Search Recipes",
+            icon: <KitchenIcon></KitchenIcon>,
+            route: "/home"
+          },
+          {
+            label: "Browse recipes by category",
+            icon: <ClassIcon></ClassIcon>,
+            route: "/category"
+          },
+          {
+            label: "Add a new recipe",
+            icon: <PostAddIcon></PostAddIcon>,
+            route: "/recipe/new"
+          },
+          {
+            label: "View my list",
+            icon: <ListIcon></ListIcon>,
+            route: `/profiles/${userName}/list`
+          },
+          {
+            label: "View kitchen items",
+            icon: <LocalDiningIcon></LocalDiningIcon>,
+            route: "/items"
+          },
+          {
+            label: "Search profiles",
+            icon: <EmojiPeopleIcon></EmojiPeopleIcon>,
+            route: "/profiles"
+          },
+          {
+            label: "My Account",
+            icon: <AccountCircleIcon></AccountCircleIcon>,
+            route: `/profiles/${userName}`
+          }
+        ].map(entry => (
+          <Link
+            to={entry.route}
+            key={entry.label}
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            <ListItemIcon>
-              <ExitToAppIcon></ExitToAppIcon>
-            </ListItemIcon>
-            <ListItemText primary="Logout"></ListItemText>
-          </ListItem>
-        </List>
-      </div>
+            <ListItem button>
+              <ListItemIcon>{entry.icon}</ListItemIcon>
+              <ListItemText primary={entry.label}></ListItemText>
+            </ListItem>
+          </Link>
+        ))}
+      </List>
+      <Divider></Divider>
+      <List>
+        <ListItem
+          button
+          onClick={() => {
+            console.log("Here");
+            dispatchToUser({ type: LOGOUT });
+          }}
+        >
+          <ListItemIcon>
+            <ExitToAppIcon></ExitToAppIcon>
+          </ListItemIcon>
+          <ListItemText primary="Logout"></ListItemText>
+        </ListItem>
+      </List>
     </Drawer>
   );
 };
