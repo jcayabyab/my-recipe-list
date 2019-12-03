@@ -1,17 +1,23 @@
 import React, { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import LocalDiningIcon from "@material-ui/icons/LocalDining";
-import ListIcon from "@material-ui/icons/List";
-import EmojiPeopleIcon from "@material-ui/icons/EmojiPeople";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import KitchenIcon from "@material-ui/icons/Kitchen";
+import {
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText
+} from "@material-ui/core";
+import {
+  LocalDining as LocalDiningIcon,
+  List as ListIcon,
+  EmojiPeople as EmojiPeopleIcon,
+  AccountCircle as AccountCircleIcon,
+  ExitToApp as ExitToAppIcon,
+  Kitchen as KitchenIcon,
+  Class as ClassIcon,
+  PostAdd as PostAddIcon
+} from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
 import { LOGOUT } from "../contexts/types";
@@ -35,6 +41,16 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
               label: "Search Recipes",
               icon: <KitchenIcon></KitchenIcon>,
               route: "/home"
+            },
+            {
+              label: "Browse recipes by category",
+              icon: <ClassIcon></ClassIcon>,
+              route: "/category"
+            },
+            {
+              label: "Add a new recipe",
+              icon: <PostAdd></PostAdd>,
+              route: "/recipe/new"
             },
             {
               label: "View my list",
