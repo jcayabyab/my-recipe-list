@@ -20,6 +20,8 @@ const App = props => {
     const userFromLocalStorage = ls.get("user");
     if (userFromLocalStorage) {
       dispatchToUser({ type: LOGIN, payload: userFromLocalStorage });
+    } else {
+      dispatchToUser({ type: LOGIN, payload: null });
     }
   }, [dispatchToUser]);
 

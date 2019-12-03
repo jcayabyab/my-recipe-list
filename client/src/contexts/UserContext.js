@@ -4,7 +4,9 @@ import ls from "local-storage";
 
 export const UserContext = createContext();
 
-const initialState = null;
+// if false, hasn't tried retrieving yet
+// if null, then not logged in
+const initialState = false;
 function reducer(state, action) {
   switch (action.type) {
     case types.LOGIN:
