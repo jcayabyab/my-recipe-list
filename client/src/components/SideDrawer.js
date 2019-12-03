@@ -37,6 +37,16 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
               route: "/home"
             },
             {
+              label: "Browse recipes by category",
+              icon: <ClassIcon></ClassIcon>,
+              route: "/category"
+            },
+            {
+              label: "Add a new recipe",
+              icon: <PostAddIcon></PostAddIcon>,
+              route: "/recipe/new"
+            },
+            {
               label: "View my list",
               icon: <ListIcon></ListIcon>,
               route: `/profiles/${userName}/list`
