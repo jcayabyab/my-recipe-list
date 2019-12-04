@@ -54,8 +54,9 @@ module.exports = (app, connection) => {
     const { recipeId } = req.query;
 
     let recipeQuery = `
-      SELECT * FROM RECIPE
-      WHERE RecipeID = ${connection.escape(recipeId)} 
+      SELECT * FROM RECIPE as r, USER_RECIPE_WRITES as urw
+      WHERE r.RecipeID = ${connection.escape(recipeId)}
+      AND r.RecipeID = urw.RecipeID
     `;
 
     let ingrQuery = `
@@ -78,11 +79,22 @@ module.exports = (app, connection) => {
       ORDER BY StepNum ASC;
     `;
 
+    let reviewsQuery = `
+      SELECT r.*, urw.WriterUserName, u.profilePictureUrl
+      FROM REVIEW AS r, USER_REVIEW_WRITES AS urw, USER as u
+      WHERE r.RecipeID = urw.RecipeID
+      AND r.ReviewID = urw.ReviewID
+      AND r.RecipeID = ${connection.escape(recipeId)}
+      AND u.UserName = urw.WriterUserName
+      ORDER BY r.TimePosted DESC
+    `;
+
     try {
       const [rows] = await connection.promise().query(recipeQuery);
       const [ingredients] = await connection.promise().query(ingrQuery);
       const [kitchenware] = await connection.promise().query(wareQuery);
       const [steps] = await connection.promise().query(stepsQuery);
+      const [reviews] = await connection.promise().query(reviewsQuery);
 
       if (rows.length === 0) {
         return sendNotFoundError(res);
@@ -92,6 +104,7 @@ module.exports = (app, connection) => {
       recipe.ingredients = camelcaseKeys(ingredients);
       recipe.kitchenware = camelcaseKeys(kitchenware);
       recipe.steps = camelcaseKeys(steps);
+      recipe.reviews = camelcaseKeys(reviews);
 
       res.send(recipe);
     } catch (error) {
@@ -206,7 +219,7 @@ module.exports = (app, connection) => {
       await connection.promise().query(stepsQuery);
 
       // short way to avoid making another SQL query
-      res.send({recipeId});
+      res.send({ recipeId });
     } catch (error) {
       console.log(error);
       return sendSQLError(res);
