@@ -58,7 +58,7 @@ module.exports = (app, connection) => {
         return sendNotFoundError(res);
       }
 
-      res.send(camelcaseKeys(rows));
+      res.send(camelcaseKeys(rows[0]));
     } catch (error) {
       return sendSQLError(res);
     }
