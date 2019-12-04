@@ -49,19 +49,62 @@ module.exports = (app, connection) => {
   app.get("/api/recipe", async (req, res) => {
     const { recipeId } = req.query;
 
-    let query = `
-      SELECT * FROM RECIPE
-      WHERE RecipeID = ${connection.escape(recipeId)} 
+    let recipeQuery = `
+      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl
+      FROM RECIPE as r, USER_RECIPE_WRITES as urw, USER as u
+      WHERE r.RecipeID = ${connection.escape(recipeId)}
+      AND r.RecipeID = urw.RecipeID
+      AND urw.UserName = u.UserName
+    `;
+
+    let ingrQuery = `
+      SELECT i.ItemName, i.Calories
+      FROM NEEDS AS n, INGREDIENT AS i
+      WHERE n.RecipeID = ${connection.escape(recipeId)}
+      AND n.ItemName = i.ItemName
+    `;
+
+    let wareQuery = `
+      SELECT w.ItemName, w.purchaseLink
+      FROM NEEDS AS n, KITCHENWARE AS w
+      WHERE n.RecipeID = ${connection.escape(recipeId)}
+      AND n.ItemName = w.ItemName
+    `;
+
+    let stepsQuery = `
+      SELECT StepNum, Description FROM STEP
+      WHERE RecipeID = ${connection.escape(recipeId)}
+      ORDER BY StepNum ASC;
+    `;
+
+    let reviewsQuery = `
+      SELECT r.*, urw.WriterUserName, u.profilePictureUrl
+      FROM REVIEW AS r, USER_REVIEW_WRITES AS urw, USER as u
+      WHERE r.RecipeID = urw.RecipeID
+      AND r.ReviewID = urw.ReviewID
+      AND r.RecipeID = ${connection.escape(recipeId)}
+      AND u.UserName = urw.WriterUserName
+      ORDER BY r.TimePosted DESC
     `;
 
     try {
-      const [rows] = await connection.promise().query(query);
+      const [rows] = await connection.promise().query(recipeQuery);
+      const [ingredients] = await connection.promise().query(ingrQuery);
+      const [kitchenware] = await connection.promise().query(wareQuery);
+      const [steps] = await connection.promise().query(stepsQuery);
+      const [reviews] = await connection.promise().query(reviewsQuery);
 
       if (rows.length === 0) {
         return sendNotFoundError(res);
       }
 
-      res.send(rows[0]);
+      const recipe = camelcaseKeys(rows[0]);
+      recipe.ingredients = camelcaseKeys(ingredients);
+      recipe.kitchenware = camelcaseKeys(kitchenware);
+      recipe.steps = camelcaseKeys(steps);
+      recipe.reviews = camelcaseKeys(reviews);
+
+      res.send(recipe);
     } catch (error) {
       console.log("SQL exception occurred: " + error);
       return sendSQLError(res);
@@ -94,7 +137,15 @@ module.exports = (app, connection) => {
     try {
       // add needs and steps later
       // ingredients, kitchenware, steps: all arrays
-      const { name, description, pictureUrl } = req.body;
+      const {
+        name,
+        description,
+        pictureUrl,
+        ingredients,
+        kitchenware,
+        steps,
+        userName
+      } = req.body;
 
       let query = `
         INSERT INTO RECIPE
@@ -111,13 +162,39 @@ module.exports = (app, connection) => {
 
       // TODO add needs kitchenware and ingredients
 
-      const [results] = connection.promise().query(query);
+      let [results] = await connection.promise().query(query);
 
       if (results.affectedRows !== 1) {
         return sendNotOneUpdateError(res);
       }
 
       const recipeId = results.insertId;
+
+      const itemsQuery = `
+        INSERT INTO NEEDS
+        VALUES
+        ${[...ingredients, ...kitchenware]
+          .map(
+            item =>
+              `(${connection.escape(recipeId)}, ${connection.escape(item)})`
+          )
+          .join(", ")}
+      `;
+
+      const stepsQuery = `
+        INSERT INTO STEP
+        VALUES
+        ${steps
+          .map(
+            (step, index) =>
+              `(
+              ${connection.escape(recipeId)},
+              ${connection.escape(index + 1)},
+              ${connection.escape(step)}
+              )`
+          )
+          .join(", ")}
+      `;
 
       const writesQuery = `
       INSERT INTO USER_RECIPE_WRITES
@@ -134,9 +211,13 @@ module.exports = (app, connection) => {
         return sendNotOneUpdateError(res);
       }
 
+      await connection.promise().query(itemsQuery);
+      await connection.promise().query(stepsQuery);
+
       // short way to avoid making another SQL query
-      res.send({ recipeId, name, description, pictureUrl });
+      res.send({ recipeId });
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
@@ -208,9 +289,10 @@ const buildRecipeSearchQuery = (
         ? `
           EXISTS
           (
-            SELECT * FROM INGREDIENT
-            WHERE ItemName IN
+            SELECT * FROM NEEDS as n
+            WHERE n.ItemName IN
             ${generateSQLCollectionFromArr(connection, ingredients)}
+            AND n.RecipeID = rc.recipeID
           )
         `
         : null;
@@ -220,9 +302,10 @@ const buildRecipeSearchQuery = (
         ? `
           EXISTS
           (
-            SELECT * FROM KITCHEN_ITEM
+            SELECT * FROM NEEDS
             WHERE ItemName IN
             ${generateSQLCollectionFromArr(connection, kitchenItems)}
+            AND n.RecipeID = rc.recipeID
           )
         `
         : null;

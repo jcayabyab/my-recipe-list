@@ -6,6 +6,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import MenuIcon from "@material-ui/icons/Menu";
 import SideDrawer from "./SideDrawer";
 import Typography from "@material-ui/core/Typography";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+
+const NoDecorLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`;
 
 const NavBar = () => {
   const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -13,10 +20,10 @@ const NavBar = () => {
 
   return (
     <React.Fragment>
-      <AppBar position="sticky" color="secondary">
+      <AppBar position="sticky" color="primary">
         <Toolbar style={{ justifyContent: "flex-end" }}>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            MyRecipeList.com
+            <NoDecorLink to="/home">MyRecipeList.com</NoDecorLink>
           </Typography>
           <Typography variant="body1">
             {user && `Hello, ${user.firstName || user.userName}`}

@@ -19,8 +19,9 @@ module.exports = (app, connection) => {
     try {
       const [rows] = await connection.promise().query(query);
 
-      res.send(rows);
+      res.send(camelcaseKeys(rows));
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
@@ -57,7 +58,7 @@ module.exports = (app, connection) => {
         return sendNotFoundError(res);
       }
 
-      res.send(camelcaseKeys(rows));
+      res.send(camelcaseKeys(rows[0]));
     } catch (error) {
       return sendSQLError(res);
     }
