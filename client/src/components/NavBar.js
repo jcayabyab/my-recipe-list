@@ -26,7 +26,7 @@ const NavBar = () => {
             <NoDecorLink to="/home">MyRecipeList.com</NoDecorLink>
           </Typography>
           <Typography variant="body1">
-            {user && `Hello, ${user.firstName || user.userName}`}
+            {user && `Hello, ${user.firstName || user.userName}${user.isAdmin ? " (Admin)" : ""}`}
           </Typography>
           <IconButton onClick={() => setDrawerIsOpen(true)} color="inherit">
             <MenuIcon />

@@ -124,7 +124,7 @@ module.exports = (app, connection) => {
     `;
 
     try {
-      const [results] = connection.promise().query(query);
+      const [results] = await connection.promise().query(query);
 
       if (results.affectedRows !== 1) {
         return sendNotOneUpdateError(res);
