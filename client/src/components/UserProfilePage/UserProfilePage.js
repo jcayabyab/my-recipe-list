@@ -2,7 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
-import { CssBaseline, Container, Button } from "@material-ui/core";
+import {
+  CssBaseline,
+  Container,
+  Button,
+  Avatar,
+  Grid
+} from "@material-ui/core";
 import styled from "styled-components";
 
 const Body = styled(Container)`
@@ -70,26 +76,36 @@ const UserProfilePage = ({ location }) => {
       <CssBaseline></CssBaseline>
       <Body>
         <Row>
-          <img
-            width='150px'
-            height='150px'
-            alt="profile picture"
-            src={profileUser.profilePictureUrl}
-          ></img>
-          <div align="left">
-            <span>
-              <h2>
-                {profileUser.firstName}, {profileUser.lastName}
-              </h2>
-            </span>
-            <span>
-              <h4>{profileUser.country}</h4>
-            </span>
-          </div>
-          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-          <Button variant="contained" color="primary" onClick={handleFriend}>
-            {profileUser.isFriend ? "Unfriend" : "Add friend" }
-          </Button>
+          <Grid item xs={12} sm container>
+            <Grid item xs>
+              <Row>
+                <Avatar
+                  style={{ width: "150px", height: "150px", borderRadius: 0 }}
+                  alt="profile pic"
+                  src={profileUser.profilePictureUrl}
+                />
+                <div align="left">
+                  <span>
+                    <h2>
+                      {profileUser.firstName}, {profileUser.lastName}
+                    </h2>
+                  </span>
+                  <span>
+                    <h4>{profileUser.country}</h4>
+                  </span>
+                </div>
+              </Row>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleFriend}
+              >
+                {profileUser.isFriend ? "Unfriend" : "Add friend"}
+              </Button>
+            </Grid>
+          </Grid>
         </Row>
       </Body>
     </React.Fragment>
