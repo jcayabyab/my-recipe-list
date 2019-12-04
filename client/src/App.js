@@ -13,6 +13,7 @@ import { LOGIN } from "./contexts/types";
 import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
 import CreateRecipePage from "./components/CreateRecipePage/CreateRecipePage";
+import ListPage from "./components/ListPage/ListPage";
 
 const App = props => {
   const [user, dispatchToUser] = useContext(UserContext);
@@ -44,6 +45,13 @@ const App = props => {
         </RedirectRoute>
         <RedirectRoute condition={user === null} redirect="/" path="/profiles">
           <UserSearchPage></UserSearchPage>
+        </RedirectRoute>
+        <RedirectRoute
+          condition={user === null}
+          redirect="/"
+          path="/list"
+        >
+          <ListPage></ListPage>
         </RedirectRoute>
         <RedirectRoute
           condition={user === null}
