@@ -14,7 +14,7 @@ import {
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
 import RecipeSearchForm from "./RecipeSearchForm";
-import TableHeaderCell from "../TableHeaderCell";
+import TableHeaderCell from "../../utils/TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -45,7 +45,6 @@ const RecipeSearchPage = props => {
       kitchenItems
     });
 
-    console.log(recipes);
     setRecipes(recipes);
   };
 

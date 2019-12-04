@@ -115,8 +115,6 @@ const RecipePage = ({ location, history }) => {
   }
   */
 
-  console.log(recipe);
-
   return recipe ? (
     <React.Fragment>
       <CssBaseline></CssBaseline>

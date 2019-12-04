@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
-import TableHeaderCell from "../TableHeaderCell";
+import TableHeaderCell from "../../utils/TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -60,8 +60,6 @@ const CategoryPage = ({ location, history }) => {
   const handleTableClick = recipeId => {
     history.push(`/recipes/${recipeId}`);
   };
-
-  console.log(category);
 
   // this should be iterable
   const renderTableRow = recipe => (
