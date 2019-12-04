@@ -12,14 +12,18 @@ module.exports = (app, connection) => {
     const { recipeId } = req.query;
 
     const query = `
-        SELECT r.*, urw.WriterUserName FROM REVIEW AS r, USER_REVIEW_WRITES AS urw
+        SELECT r.*, urw.WriterUserName
+        FROM REVIEW AS r, USER_REVIEW_WRITES AS urw
         WHERE r.RecipeID = urw.RecipeID
         AND r.ReviewID = urw.ReviewID
         AND r.RecipeID = ${connection.escape(recipeId)}
+        ORDER BY r.TimePosted ASC;
       `;
 
     try {
       const [rows] = await connection.promise().query(query);
+
+      console.log(rows);
 
       res.send(camelcaseKeys(rows));
     } catch (error) {
@@ -33,16 +37,30 @@ module.exports = (app, connection) => {
 
     const reviewQuery = `
       INSERT INTO REVIEW
+      (
+        RecipeID,
+        OverallRating,
+        PresentationRating,
+        TasteRating,
+        NVRating,
+        EasyFollowRating,
+        Title,
+        Body,
+        TimePosted
+      )
       VALUES
       (
         ${connection.escape(recipeId)},
-        ${connection.escape((easyToFollow, presentation, taste, nv) / 4)},
-        ${connection.escape(presentation)},
-        ${connection.escape(taste)},
-        ${connection.escape(nv)},
-        ${connection.escape(easyToFollow)},
+        ${connection.escape(
+          (+easyToFollow + +presentation + +taste + +nv) / 4
+        )},
+        ${connection.escape(+presentation)},
+        ${connection.escape(+taste)},
+        ${connection.escape(+nv)},
+        ${connection.escape(+easyToFollow)},
         ${connection.escape(title)},
         ${connection.escape(body)},
+        ${connection.escape(toSqlDateTime(new Date()))}
       )  
     `;
 
@@ -61,8 +79,7 @@ module.exports = (app, connection) => {
       (
         ${connection.escape(userName)},
         ${connection.escape(recipeId)},
-        ${connection.escape(reviewId)},
-        ${connection.escape(toSqlDateTime(new Date()))}
+        ${connection.escape(reviewId)}
       )
       `;
 
@@ -74,6 +91,7 @@ module.exports = (app, connection) => {
 
       res.send("Success");
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
