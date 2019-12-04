@@ -293,9 +293,10 @@ const buildRecipeSearchQuery = (
         ? `
           EXISTS
           (
-            SELECT * FROM INGREDIENT
-            WHERE ItemName IN
+            SELECT * FROM NEEDS as n
+            WHERE n.ItemName IN
             ${generateSQLCollectionFromArr(connection, ingredients)}
+            AND n.RecipeID = rc.recipeID
           )
         `
         : null;
@@ -305,9 +306,10 @@ const buildRecipeSearchQuery = (
         ? `
           EXISTS
           (
-            SELECT * FROM KITCHEN_ITEM
+            SELECT * FROM NEEDS
             WHERE ItemName IN
             ${generateSQLCollectionFromArr(connection, kitchenItems)}
+            AND n.RecipeID = rc.recipeID
           )
         `
         : null;

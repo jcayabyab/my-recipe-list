@@ -32,6 +32,8 @@ const RecipeSearchForm = ({ handleSearch }) => {
   const INGREDIENT = "INGREDIENT";
   const KITCHENWARE = "KITCHENWARE";
 
+  console.log(ingredientTags);
+
   useEffect(() => {
     const getIngredients = async () => {
       const { data: theIngredients } = await axios.get("/api/ingredients");
@@ -59,10 +61,12 @@ const RecipeSearchForm = ({ handleSearch }) => {
   const handleTagChange = (tags, type) => {
     switch (type) {
       case INGREDIENT:
-        setIngredientTags(tags);
+        // convert null (on delete last tag) to empty array
+        setIngredientTags(tags ? tags : []);
         break;
       case KITCHENWARE:
-        setKitchenwareTags(tags);
+        // convert null (on delete last tag) to empty array
+        setKitchenwareTags(tags ? tags : []);
         break;
       default:
         break;
