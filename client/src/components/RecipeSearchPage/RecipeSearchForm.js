@@ -102,7 +102,11 @@ const RecipeSearchForm = ({ handleSearch }) => {
           label: item.itemName
         }))}
         styles={{
-          control: styles => ({ ...styles, width: "300px" }),
+          control: styles => ({
+            ...styles,
+            width: "300px",
+            margin: "0px 10px"
+          }),
           menu: (provided, state) => ({
             ...provided,
             zIndex: 3

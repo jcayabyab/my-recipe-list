@@ -170,6 +170,8 @@ module.exports = (app, connection) => {
           .join(", ")}
       `;
 
+      console.log(itemsQuery);
+
       const stepsQuery = `
         INSERT INTO STEP
         VALUES

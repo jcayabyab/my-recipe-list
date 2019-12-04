@@ -12,6 +12,7 @@ import ls from "local-storage";
 import { LOGIN } from "./contexts/types";
 import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 import CategoryPage from "./components/CategoryPage/CategoryPage";
+import CreateRecipePage from "./components/CreateRecipePage/CreateRecipePage";
 
 const App = props => {
   const [user, dispatchToUser] = useContext(UserContext);
@@ -44,7 +45,18 @@ const App = props => {
         <RedirectRoute condition={user === null} redirect="/" path="/profiles">
           <UserSearchPage></UserSearchPage>
         </RedirectRoute>
-        <RedirectRoute condition={user === null} redirect="/" path="/category/:id">
+        <RedirectRoute
+          condition={user === null}
+          redirect="/"
+          path="/new-recipe"
+        >
+          <CreateRecipePage></CreateRecipePage>
+        </RedirectRoute>
+        <RedirectRoute
+          condition={user === null}
+          redirect="/"
+          path="/category/:id"
+        >
           <CategoryPage></CategoryPage>
         </RedirectRoute>
         <RedirectRoute condition={user === null} redirect="/" path="/category">
