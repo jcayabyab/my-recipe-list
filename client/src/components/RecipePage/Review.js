@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Card,
   CardHeader,
   CardContent,
   Typography,
-  Box
+  Box,
+  Button
 } from "@material-ui/core";
 import ColoredAvatar from "../../utils/ColoredAvatar";
 import { useTheme } from "@material-ui/core";
 import styled from "styled-components";
+import { UserContext } from "../../contexts/UserContext";
 import { green, orange, red } from "@material-ui/core/colors";
 
 const RatingText = styled.small`
   margin: 2px 3px;
 `;
 
-const Review = ({
-  review: {
+const Review = ({ review, handleDelete }) => {
+  const {
     overallRating,
     presentationRating,
     tasteRating,
@@ -26,10 +28,11 @@ const Review = ({
     body,
     timePosted,
     writerUserName,
-    profilePictureUrl
-  } = null
-}) => {
+    profilePictureUrl,
+    reviewId
+  } = review;
   const { palette } = useTheme();
+  const [{isAdmin}] = useContext(UserContext);
 
   let ratingColor = green[500];
   if (overallRating < 3.0) {
@@ -74,15 +77,28 @@ const Review = ({
                 </RatingText>
               </div>
             </Box>
-            <ColoredAvatar variant="square" color={ratingColor}>{overallRating}</ColoredAvatar>
+            <ColoredAvatar variant="square" color={ratingColor}>
+              {overallRating}
+            </ColoredAvatar>
           </Box>
         }
       ></CardHeader>
 
       <CardContent>
-        <Typography variant="body2" component="p">
-          {body}
-        </Typography>
+        <Box display="flex" justifyContent="space-between">
+          <Typography variant="body2" component="p">
+            {body}
+          </Typography>
+          {isAdmin && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => handleDelete(reviewId)}
+            >
+              Delete Review
+            </Button>
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

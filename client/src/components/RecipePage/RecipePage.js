@@ -12,7 +12,6 @@ import {
   Typography,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemIcon,
   ListItemText,
   Tooltip,
@@ -88,6 +87,14 @@ const RecipePage = ({ location }) => {
     getRecipe();
   };
 
+  const handleReviewDelete = async reviewId => {
+    await axios.post("/api/review/delete", {
+      reviewId
+    });
+
+    getRecipe();
+  };
+
   /*
   this is the data (for now, we'll add more later)
   {
@@ -115,11 +122,17 @@ const RecipePage = ({ location }) => {
             />
             <Grid item xs>
               <div>
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h2" style={{marginBottom: "10px"}}>{recipe.name}</Typography>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography variant="h2" style={{ marginBottom: "10px" }}>
+                    {recipe.name}
+                  </Typography>
                   <Tooltip title={`By ${recipe.firstName} ${recipe.lastName}`}>
                     <ColoredAvatar
-                    style={{width: "60px", height: "60px"}}
+                      style={{ width: "60px", height: "60px" }}
                       color={palette.secondary.main}
                       src={recipe.profilePictureUrl}
                     ></ColoredAvatar>
@@ -186,6 +199,7 @@ const RecipePage = ({ location }) => {
           <Reviews
             handleSubmitReview={handleSubmitReview}
             reviews={recipe.reviews}
+            handleReviewDelete={handleReviewDelete}
           ></Reviews>
         </Column>
       </Body>
