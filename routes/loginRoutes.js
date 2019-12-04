@@ -12,9 +12,17 @@ module.exports = (app, connection) => {
     try {
       const [rows] = await connection.promise().query(
         `
-        SELECT * FROM USER
-        WHERE UserName=${connection.escape(username)}
-        AND Password=${connection.escape(password)}
+        SELECT u.*,
+          CASE WHEN EXISTS
+          (
+            SELECT * FROM ADMIN AS a
+            WHERE a.UserName = u.UserName
+          )
+          THEN 1 ELSE 0 END
+          AS isAdmin
+        FROM USER as u
+        WHERE u.UserName=${connection.escape(username)}
+        AND u.Password=${connection.escape(password)}
       `
       );
       if (rows.length !== 1) {

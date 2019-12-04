@@ -135,7 +135,6 @@ const RecipePage = ({ location }) => {
           {recipe.ingredients.length || recipe.kitchenware.length ? (
             <Paper
               style={{
-                height: "150px",
                 padding: "1em",
                 margin: "10px 10px 0px"
               }}
@@ -171,7 +170,6 @@ const RecipePage = ({ location }) => {
           )}
           <Paper
             style={{
-              height: "150px",
               padding: "1em",
               margin: "10px 10px 0px"
             }}
