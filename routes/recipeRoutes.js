@@ -54,9 +54,11 @@ module.exports = (app, connection) => {
     const { recipeId } = req.query;
 
     let recipeQuery = `
-      SELECT * FROM RECIPE as r, USER_RECIPE_WRITES as urw
+      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl
+      FROM RECIPE as r, USER_RECIPE_WRITES as urw, USER as u
       WHERE r.RecipeID = ${connection.escape(recipeId)}
       AND r.RecipeID = urw.RecipeID
+      AND urw.UserName = u.UserName
     `;
 
     let ingrQuery = `

@@ -3,7 +3,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Avatar,
   Typography,
   Box
 } from "@material-ui/core";
