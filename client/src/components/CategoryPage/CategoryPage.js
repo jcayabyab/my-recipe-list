@@ -61,8 +61,6 @@ const CategoryPage = ({ location, history }) => {
     history.push(`/recipes/${recipeId}`);
   };
 
-  console.log(category);
-
   // this should be iterable
   const renderTableRow = recipe => (
     <TableRowLink

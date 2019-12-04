@@ -45,7 +45,6 @@ const RecipeSearchPage = props => {
       kitchenItems
     });
 
-    console.log(recipes);
     setRecipes(recipes);
   };
 

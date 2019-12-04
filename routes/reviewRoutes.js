@@ -23,8 +23,6 @@ module.exports = (app, connection) => {
     try {
       const [rows] = await connection.promise().query(query);
 
-      console.log(rows);
-
       res.send(camelcaseKeys(rows));
     } catch (error) {
       sendSQLError(res);

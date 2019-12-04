@@ -89,7 +89,6 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
         <ListItem
           button
           onClick={() => {
-            console.log("Here");
             dispatchToUser({ type: LOGOUT });
           }}
         >

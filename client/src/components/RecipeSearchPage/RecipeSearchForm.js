@@ -32,8 +32,6 @@ const RecipeSearchForm = ({ handleSearch }) => {
   const INGREDIENT = "INGREDIENT";
   const KITCHENWARE = "KITCHENWARE";
 
-  console.log(ingredientTags);
-
   useEffect(() => {
     const getIngredients = async () => {
       const { data: theIngredients } = await axios.get("/api/ingredients");

@@ -30,16 +30,12 @@ module.exports = (app, connection) => {
     // accepts { name: String, ingredients: array of string, kitchenItems: array of string }
     const { searchQuery, ingredients, kitchenItems } = req.body;
 
-    console.log(req.body);
-
     let query = buildRecipeSearchQuery(
       connection,
       searchQuery,
       ingredients,
       kitchenItems
     );
-
-    console.log(query);
 
     try {
       const [rows] = await connection.promise().query(query);
@@ -184,8 +180,6 @@ module.exports = (app, connection) => {
           )
           .join(", ")}
       `;
-
-      console.log(itemsQuery);
 
       const stepsQuery = `
         INSERT INTO STEP
