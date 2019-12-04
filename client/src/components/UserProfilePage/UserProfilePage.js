@@ -7,7 +7,9 @@ import {
   Container,
   Button,
   Avatar,
-  Grid
+  Grid,
+  Box,
+  Typography
 } from "@material-ui/core";
 import styled from "styled-components";
 
@@ -17,7 +19,7 @@ const Body = styled(Container)`
 
 const Row = styled.div`
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
 
   & > * {
     margin: 0px 10px;
@@ -76,34 +78,31 @@ const UserProfilePage = ({ location }) => {
       <CssBaseline></CssBaseline>
       <Body>
         <Row>
-          <Grid item xs={12} sm container>
+          <Grid container>
             <Grid item xs>
               <Row>
-                <Avatar
-                  style={{ width: "150px", height: "150px", borderRadius: 0 }}
-                  alt="profile pic"
-                  src={profileUser.profilePictureUrl}
-                />
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Avatar
+                    style={{ width: "150px", height: "150px", borderRadius: 0 }}
+                    alt="profile pic"
+                    src={profileUser.profilePictureUrl}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleFriend}
+                    style={{ marginTop: "10px" }}
+                  >
+                    {profileUser.isFriend ? "Unfriend" : "Add friend"}
+                  </Button>
+                </Box>
                 <div align="left">
-                  <span>
-                    <h2>
+                    <Typography variant="h5">
                       {profileUser.firstName}, {profileUser.lastName}
-                    </h2>
-                  </span>
-                  <span>
-                    <h4>{profileUser.country}</h4>
-                  </span>
+                    </Typography>
+                    <Typography variant="p">{profileUser.country}</Typography>
                 </div>
               </Row>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleFriend}
-              >
-                {profileUser.isFriend ? "Unfriend" : "Add friend"}
-              </Button>
             </Grid>
           </Grid>
         </Row>
