@@ -100,7 +100,7 @@ const UserProfilePage = ({ location }) => {
                     <Typography variant="h5">
                       {profileUser.firstName}, {profileUser.lastName}
                     </Typography>
-                    <Typography variant="p">{profileUser.country}</Typography>
+                    <Typography variant="body1">{profileUser.country}</Typography>
                 </div>
               </Row>
             </Grid>

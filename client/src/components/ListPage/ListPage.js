@@ -20,7 +20,7 @@ import {
 } from "@material-ui/icons";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
-import TableHeaderCell from "../TableHeaderCell";
+import TableHeaderCell from "../../utils/TableHeaderCell";
 import { UserContext } from "../../contexts/UserContext";
 
 const Body = styled(Container)`

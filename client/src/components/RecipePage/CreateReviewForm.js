@@ -3,7 +3,6 @@ import {
   TextField,
   Button,
   FormHelperText,
-  Box,
   Paper,
   Typography
 } from "@material-ui/core";
