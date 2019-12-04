@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import {
-  useTheme,
   Container,
   CssBaseline,
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
-  Button,
   Typography
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
@@ -27,7 +24,6 @@ const Categories = styled.div`
 
 const CategoriesPage = ({ history }) => {
   const [categories, setCategories] = useState([]);
-  const { palette } = useTheme();
 
   useEffect(() => {
     const getAllRecipes = async () => {

@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { UserContext } from "../../contexts/UserContext";
 import { withRouter } from "react-router-dom";
 import {
-  useTheme,
   Container,
   CssBaseline,
   Typography,
@@ -38,8 +37,6 @@ const CreateRecipePage = ({ location, history }) => {
       console.log(err.response.status);
     }
   };
-
-  const { palette } = useTheme();
 
   return (
     <React.Fragment>

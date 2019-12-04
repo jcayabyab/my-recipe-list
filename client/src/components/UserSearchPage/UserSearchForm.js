@@ -1,7 +1,6 @@
 import React from "react";
-import { TextField, Button, FormHelperText, Box } from "@material-ui/core";
+import { TextField, Button, Box } from "@material-ui/core";
 import styled from "styled-components";
-import { useTheme } from "@material-ui/core";
 
 const SearchButton = styled(Button)`
   margin: 0px 10px;
@@ -23,22 +22,12 @@ const TextFieldMargin = styled(TextField)`
 
 const RecipeSearchForm = ({ handleSearch }) => {
   const [userName, setUsername] = React.useState("");
-  const [showErrors, setShowErrors] = React.useState(false);
-
-  const { palette } = useTheme();
-
-  const formHasErrors = () => {
-    return false;
-  };
 
   const handleSubmit = e => {
     e.preventDefault();
     // show after first submit
-    setShowErrors(true);
 
-    if (!formHasErrors()) {
-      handleSearch(userName);
-    }
+    handleSearch(userName);
   };
 
   return (
