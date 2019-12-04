@@ -9,15 +9,29 @@ import {
   TableCell,
   TableRow,
   Typography,
-  Box
+  Paper
 } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
 import ResultList from "../../utils/ResultList";
-import RecipeSearchForm from "./RecipeSearchForm";
 import TableHeaderCell from "../TableHeaderCell";
 
 const Body = styled(Container)`
   padding: 20px 0px;
+`;
+
+const Banner = styled(Paper)`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  height: 150px;
+  padding: 20px;
+  margin-bottom: 10px;
+  background-image: url("${({ pictureUrl }) => pictureUrl}");
+  background-size: cover;
+  background-position: center;
+  color: white;
+  letter-spacing: 0.05em;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 `;
 
 const TableRowLink = styled(TableRow)`
@@ -26,32 +40,28 @@ const TableRowLink = styled(TableRow)`
   }
 `;
 
-const RecipeSearchPage = props => {
-  const [recipes, setRecipes] = useState([]);
+const CategoryPage = ({ location, history }) => {
+  const [category, setCategory] = useState({ recipes: [] });
   const { palette } = useTheme();
 
   useEffect(() => {
-    const getAllRecipes = async () => {
-      const { data: recipes } = await axios.get("/api/recipes");
-      setRecipes(recipes);
+    const getCategoryRecipes = async () => {
+      const categoryFromUrl = location.pathname.split("/").slice(-1)[0];
+
+      const { data: categoryData } = await axios.get("/api/category/", {
+        params: { categoryName: categoryFromUrl }
+      });
+
+      setCategory(categoryData);
     };
-    getAllRecipes();
-  }, [setRecipes]);
-
-  const handleSearch = async (recipeName, ingredients, kitchenItems) => {
-    const { data: recipes } = await axios.post("/api/recipes/search", {
-      searchQuery: recipeName,
-      ingredients,
-      kitchenItems
-    });
-
-    console.log(recipes);
-    setRecipes(recipes);
-  };
+    getCategoryRecipes();
+  }, [setCategory, location.pathname]);
 
   const handleTableClick = recipeId => {
-    props.history.push(`/recipes/${recipeId}`);
+    history.push(`/recipes/${recipeId}`);
   };
+
+  console.log(category);
 
   // this should be iterable
   const renderTableRow = recipe => (
@@ -84,12 +94,13 @@ const RecipeSearchPage = props => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h4">Recipes</Typography>
-          <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
-        </Box>
+        <Banner pictureUrl={category.pictureUrl}>
+          <Typography variant="h3" component="h3" style={{ color: "white" }}>
+            {category.categoryName}
+          </Typography>
+        </Banner>
         <ResultList
-          dataArr={recipes}
+          dataArr={category.recipes}
           renderTableRow={renderTableRow}
           renderTableHeader={renderTableHeader}
         ></ResultList>
@@ -98,4 +109,4 @@ const RecipeSearchPage = props => {
   );
 };
 
-export default withRouter(RecipeSearchPage);
+export default withRouter(CategoryPage);
