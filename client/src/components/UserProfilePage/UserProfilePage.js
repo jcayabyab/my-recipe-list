@@ -21,26 +21,37 @@ const Row = styled.div`
 const UserProfilePage = ({ location }) => {
   const [profileUser, setProfileUser] = useState(null);
   const [user] = useContext(UserContext);
+
+  const getProfileUser = async () => {
+    const userNameFromUrl = location.pathname.split("/").slice(-1)[0];
+
+    const { data: theUser } = await axios.get("/api/profile", {
+      params: {
+        ownUserName: user.userName,
+        userName: userNameFromUrl
+      }
+    });
+
+    setProfileUser(theUser);
+  };
+
   useEffect(() => {
-    const getProfileUser = async () => {
-      const userNameFromUrl = location.pathname.split("/").slice(-1)[0];
-
-      const { data: theUser } = await axios.get("/api/profile", {
-        params: {
-          ownUserName: user.userName,
-          userName: userNameFromUrl
-        }
-      });
-
-      setProfileUser(theUser);
-    };
-
     if (user !== null) {
       getProfileUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, location]);
 
-  console.log(profileUser);
+  const handleFriend = () => {
+    const userNameFromUrl = location.pathname.split("/").slice(-1)[0];
+
+    axios.post(`/api/user/${profileUser.isFriend ? "un" : ""}friend`, {
+      ownUserName: user.userName,
+      userName: userNameFromUrl
+    });
+
+    getProfileUser();
+  };
 
   /*
   this is the data
@@ -76,8 +87,8 @@ const UserProfilePage = ({ location }) => {
             </span>
           </div>
           <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-          <Button variant="contained" color="primary">
-            {profileUser.isFriend ? "Unfriend" : "Send Friend Request" }
+          <Button variant="contained" color="primary" onClick={handleFriend}>
+            {profileUser.isFriend ? "Unfriend" : "Add friend" }
           </Button>
         </Row>
       </Body>
