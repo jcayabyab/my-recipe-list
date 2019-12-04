@@ -49,12 +49,12 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
           {
             label: "Add a new recipe",
             icon: <PostAddIcon></PostAddIcon>,
-            route: "/recipe/new"
+            route: "/new-recipe"
           },
           {
             label: "View my list",
             icon: <ListIcon></ListIcon>,
-            route: `/profiles/${userName}/list`
+            route: `/list`
           },
           {
             label: "View kitchen items",

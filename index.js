@@ -23,6 +23,8 @@ require("./routes/recipeRoutes")(app, connection);
 require("./routes/reviewRoutes")(app, connection);
 require("./routes/userRoutes")(app, connection);
 require("./routes/listRoutes")(app, connection);
+require("./routes/categoryRoutes")(app, connection);
+require("./routes/kitchenItemRoutes")(app, connection);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));

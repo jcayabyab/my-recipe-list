@@ -5,6 +5,7 @@ const {
   sendNotFoundError,
   sendNotOneUpdateError
 } = require("../utils/sendErrorFunctions");
+const toSqlDateTime = require("../utils/toSqlDateTime");
 
 module.exports = (app, connection) => {
   // create list if not exists
@@ -17,7 +18,7 @@ module.exports = (app, connection) => {
       `;
 
     try {
-      const [rows] = await connection.promise().query(query);
+      let [rows] = await connection.promise().query(query);
 
       if (rows.length === 0) {
         const insertQuery = `
@@ -25,7 +26,7 @@ module.exports = (app, connection) => {
           (
             ${connection.escape(userName)},
             ${connection.escape(`${userName}'s list`)},
-            ${connection.escape(Date.now())}
+            ${connection.escape(toSqlDateTime(new Date()))}
           )
         `;
 
@@ -44,16 +45,12 @@ module.exports = (app, connection) => {
           const rowData = camelcaseKeys({ ...row });
 
           const rowQuery = `
-          SELECT rc.recipeId, rc.name, rc.description, rc.pictureUrl, AVG(rv.OverallRating) AS 'overallRating'
-          FROM RECIPE as rc LEFT JOIN REVIEW as rv
+          SELECT rc.recipeId, rc.name, rc.description, rc.pictureUrl, AVG(rv.OverallRating) AS 'overallRating', c.amountOfTimesMade
+          FROM RECIPE as rc LEFT JOIN (REVIEW as rv, CONTAINS as c)
           ON rv.RecipeID = rc.RecipeID 
-          WHERE EXISTS
-          (
-            SELECT * FROM CONTAINS as c
-            WHERE rc.RecipeID = c.RecipeID
-            AND c.ListName = ${connection.escape(rowData.listName)}
-            AND c.OwnerUserName = ${connection.escape(rowData.ownerUserName)}
-          )
+          WHERE rc.RecipeID = c.RecipeID
+          AND c.ListName = ${connection.escape(rowData.listName)}
+          AND c.OwnerUserName = ${connection.escape(rowData.ownerUserName)}
           GROUP BY rc.recipeId, rc.name, rc.description, rc.pictureUrl
           `;
 
@@ -63,9 +60,10 @@ module.exports = (app, connection) => {
         })
       );
 
-      console.log(listData);
+      // send only 1 list for now
       res.send(listData[0]);
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
@@ -128,11 +126,11 @@ module.exports = (app, connection) => {
   });
 
   app.post("/api/list/meal", async (req, res) => {
-    const { userName, recipeId } = req.body;
+    const { userName, recipeId, increment } = req.body;
 
     const query = `
       UPDATE CONTAINS
-      SET AmountOfTimesMade = (AmountOfTimesMade + 1)
+      SET AmountOfTimesMade = (AmountOfTimesMade ${increment ? "+" : "-"} 1)
       WHERE OwnerUserName = ${connection.escape(userName)}
       AND RecipeID = ${connection.escape(recipeId)}
     `;
