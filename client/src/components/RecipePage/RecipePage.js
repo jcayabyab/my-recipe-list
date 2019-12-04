@@ -115,10 +115,11 @@ const RecipePage = ({ location }) => {
             />
             <Grid item xs>
               <div>
-                <Box display="flex" justifyContent="space-between">
-                  <Typography variant="h2">{recipe.name}</Typography>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Typography variant="h2" style={{marginBottom: "10px"}}>{recipe.name}</Typography>
                   <Tooltip title={`By ${recipe.firstName} ${recipe.lastName}`}>
                     <ColoredAvatar
+                    style={{width: "60px", height: "60px"}}
                       color={palette.secondary.main}
                       src={recipe.profilePictureUrl}
                     ></ColoredAvatar>
