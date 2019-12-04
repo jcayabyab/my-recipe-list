@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { TextField, Button, FormHelperText, Box, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  FormHelperText,
+  Box,
+  Typography
+} from "@material-ui/core";
 import styled from "styled-components";
 import { useTheme } from "@material-ui/core";
 import StepsList from "./StepsList";
@@ -45,7 +51,7 @@ const CreateRecipeForm = ({ handleSave }) => {
   const { palette } = useTheme();
 
   const formHasErrors = () => {
-    return recipeName.length === 0;
+    return recipeName.length === 0 || steps.length === 0;
   };
 
   useEffect(() => {
@@ -130,7 +136,7 @@ const CreateRecipeForm = ({ handleSave }) => {
         </TextFieldMargin>
       </Box>
       <Box display="flex" justifyContent="center">
-      <Typography variant="h5">The recipe needs:</Typography>
+        <Typography variant="h5">The recipe needs:</Typography>
       </Box>
       <Box display="flex" justifyContent="space-around">
         <Select
@@ -166,7 +172,12 @@ const CreateRecipeForm = ({ handleSave }) => {
           placeholder="Select kitchenware..."
         ></Select>
       </Box>
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" flexDirection="column" justifyContent="center">
+        {steps.length === 0 && (
+          <FormHelperText style={{ color: palette.error.main }}>
+            Please enter at least one step.
+          </FormHelperText>
+        )}
         <StepsList steps={steps} setSteps={setSteps}></StepsList>
       </Box>
       <Box display="flex" justifyContent="center">

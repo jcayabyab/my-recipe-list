@@ -10,7 +10,6 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import CreateRecipeForm from "./CreateRecipeForm";
-import styled from "styled-components";
 
 const CreateRecipePage = ({ location, history }) => {
   const [{ userName }] = useContext(UserContext);
