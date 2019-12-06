@@ -61,13 +61,13 @@ const UserProfilePage = ({ location, history }) => {
     getProfileUser();
   };
 
-  const handleDelete = async ()  => {
+  const handleDelete = async () => {
     await axios.post("/api/user/delete", {
       userName: profileUser.userName
     });
 
     history.push("/profiles");
-  }
+  };
 
   /*
   this is the data
@@ -95,30 +95,44 @@ const UserProfilePage = ({ location, history }) => {
                     alt="profile pic"
                     src={profileUser.profilePictureUrl}
                   />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleFriend}
-                    style={{ marginTop: "10px" }}
-                  >
-                    {profileUser.isFriend ? "Unfriend" : "Add friend"}
-                  </Button>
-                  {user.isAdmin && (
+                  {user.userName !== profileUser.userName && (
+                    <React.Fragment>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleFriend}
+                        style={{ marginTop: "10px" }}
+                      >
+                        {profileUser.isFriend ? "Unfriend" : "Add friend"}
+                      </Button>
+                      {user.isAdmin && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={handleDelete}
+                          style={{ marginTop: "10px" }}
+                        >
+                          Delete User
+                        </Button>
+                      )}
+                    </React.Fragment>
+                  )}
+                  {user.userName === profileUser.userName && (
                     <Button
                       variant="contained"
-                      color="secondary"
-                      onClick={handleDelete}
+                      color="primary"
+                      onClick={() => history.push("/edit-account")}
                       style={{ marginTop: "10px" }}
                     >
-                      Delete User
+                      Edit Account
                     </Button>
                   )}
                 </Box>
                 <div align="left">
-                    <Typography variant="h5">
-                      {profileUser.firstName}, {profileUser.lastName}
-                    </Typography>
-                    <Typography variant="body1">{profileUser.country}</Typography>
+                  <Typography variant="h5">
+                    {profileUser.firstName}, {profileUser.lastName}
+                  </Typography>
+                  <Typography variant="body1">{profileUser.country}</Typography>
                 </div>
               </Row>
             </Grid>
