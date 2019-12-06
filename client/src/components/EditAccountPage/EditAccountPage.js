@@ -1,55 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import { LOGIN } from "../../contexts/types";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
-import styled from "styled-components";
-import axios from "axios";
-import {
-  useTheme,
-  Typography,
-  Box, 
-  Paper
-} from "@material-ui/core";
-import { withRouter } from "react-router-dom";
 import EditAccountForm from "./EditAccountForm";
+import axios from "axios";
+import { Typography, Paper } from "@material-ui/core";
+import { withRouter } from "react-router-dom";
 
-const Body = styled(Container)`
-  padding: 20px 0px;
-`;
+const EditAccountPage = ({ history }) => {
+  const [user, dispatchToUser] = useContext(UserContext);
 
-const EditAccountPage = props => {
-    const handleAccountChange = async (
+  const handleAccountChange = async (
+    userName,
+    firstName,
+    lastName,
+    country,
+    profilePictureUrl
+  ) => {
+    try {
+      await axios.post("/api/user/update", {
         userName,
         firstName,
         lastName,
         country,
-        profilePictureURL
-    ) => {
-        try{
-            const res = await axios.post("/api/user/update", {
-                userName,
-                firstName,
-                lastName,
-                country,
-                profilePictureURL
-            });
-        } catch (err) {
-            if((err.response.status = "404")){
-                console.log(err.response.status);
-            }
-        }
-    }
+        profilePictureUrl
+      });
 
-    return (
-        <React.Fragment>
-            <CssBaseline />
-            <Container>
-                <Paper style={{padding: "20px 20px 40px"}}>
-                    <Typography variant="h4">Edit Account Information</Typography>
-                    <EditAccountForm handleAccountChange={handleAccountChange}></EditAccountForm>
-                </Paper>
-            </Container>
-        </React.Fragment>
-    );
+      const updatedUser = {
+        ...user,
+        firstName,
+        lastName,
+        country,
+        profilePictureUrl
+      };
+
+      dispatchToUser({ type: LOGIN, payload: updatedUser });
+
+      history.push(`/user/${user.userName}`);
+    } catch (err) {
+      if ((err.response.status = "404")) {
+        console.log(err.response.status);
+      }
+    }
+  };
+
+  return (
+    <React.Fragment>
+      <CssBaseline />
+      <Container>
+        <Paper style={{ padding: "20px 20px 40px" }}>
+          <Typography variant="h4">Edit Account Information</Typography>
+          <EditAccountForm
+            user={user}
+            handleAccountChange={handleAccountChange}
+          ></EditAccountForm>
+        </Paper>
+      </Container>
+    </React.Fragment>
+  );
 };
 
 export default withRouter(EditAccountPage);

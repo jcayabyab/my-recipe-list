@@ -50,15 +50,24 @@ const App = props => {
           path="/home"
         >
           <RecipeSearchPage></RecipeSearchPage>
-        </RedirectRoute><RedirectRoute condition={user === null} redirect="/" path="/recipes/:id">
-          <RecipePage></RecipePage>
         </RedirectRoute>
         <RedirectRoute
           condition={user === null}
           redirect="/"
-          path="/user/:id"
+          path="/recipes/:id"
         >
+          <RecipePage></RecipePage>
+        </RedirectRoute>
+        <RedirectRoute condition={user === null} redirect="/" path="/user/:id">
           <UserProfilePage></UserProfilePage>
+        </RedirectRoute>
+        <RedirectRoute
+          exact
+          condition={user === null}
+          redirect="/"
+          path="/edit-profile"
+        >
+          <EditAccountPage></EditAccountPage>
         </RedirectRoute>
         <RedirectRoute
           exact
@@ -68,19 +77,8 @@ const App = props => {
         >
           <UserSearchPage></UserSearchPage>
         </RedirectRoute>
-        <RedirectRoute
-          exact
-          condition={user === null}
-          redirect="/"
-          path="/profiles"
-        >
-          <EditAccountPage></EditAccountPage>
-        </RedirectRoute>
-        <RedirectRoute
-          condition={user === null}
-          redirect="/"
-          path="/list"
-        >
+
+        <RedirectRoute condition={user === null} redirect="/" path="/list">
           <ListPage></ListPage>
         </RedirectRoute>
         <RedirectRoute

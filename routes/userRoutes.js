@@ -85,8 +85,6 @@ module.exports = (app, connection) => {
   });
 
   app.post("/api/user/update", async (req, res) => {
-    //DELETE this when functional
-    console.log(req.body);
     const {
       userName,
       firstName,

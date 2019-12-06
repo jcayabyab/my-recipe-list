@@ -98,7 +98,7 @@ const UserProfilePage = ({ location }) => {
                 </Box>
                 <div align="left">
                     <Typography variant="h5">
-                      {profileUser.firstName}, {profileUser.lastName}
+                      {profileUser.firstName} {profileUser.lastName}
                     </Typography>
                     <Typography variant="body1">{profileUser.country}</Typography>
                 </div>
