@@ -105,7 +105,7 @@ const UserProfilePage = ({ location, history }) => {
                       >
                         {profileUser.isFriend ? "Unfriend" : "Add friend"}
                       </Button>
-                      {user.isAdmin && (
+                      {user.isAdmin ? (
                         <Button
                           variant="contained"
                           color="secondary"
@@ -114,7 +114,7 @@ const UserProfilePage = ({ location, history }) => {
                         >
                           Delete User
                         </Button>
-                      )}
+                      ) : ""}
                     </React.Fragment>
                   )}
                   {user.userName === profileUser.userName && (
