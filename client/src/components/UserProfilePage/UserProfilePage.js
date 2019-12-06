@@ -129,10 +129,10 @@ const UserProfilePage = ({ location, history }) => {
                   )}
                 </Box>
                 <div align="left">
-                  <Typography variant="h5">
-                    {profileUser.firstName}, {profileUser.lastName}
-                  </Typography>
-                  <Typography variant="body1">{profileUser.country}</Typography>
+                    <Typography variant="h5">
+                      {profileUser.firstName} {profileUser.lastName}
+                    </Typography>
+                    <Typography variant="body1">{profileUser.country}</Typography>
                 </div>
               </Row>
             </Grid>

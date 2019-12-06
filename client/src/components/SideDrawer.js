@@ -23,9 +23,7 @@ import { Link } from "react-router-dom";
 import { LOGOUT } from "../contexts/types";
 
 const SideDrawer = ({ open, setDrawerIsOpen }) => {
-  const [user, dispatchToUser] = useContext(UserContext);
-
-  const userName = user ? user.userName : "placeholder";
+  const [, dispatchToUser] = useContext(UserContext);
 
   return (
     <Drawer
@@ -37,7 +35,7 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
       <List>
         {[
           {
-            label: "Search Recipes",
+            label: "Search recipes",
             icon: <KitchenIcon></KitchenIcon>,
             route: "/home"
           },
@@ -67,9 +65,9 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
             route: "/profiles"
           },
           {
-            label: "My Account",
+            label: "Edit my account info",
             icon: <AccountCircleIcon></AccountCircleIcon>,
-            route: `/profiles/${userName}`
+            route: `/edit-profile`
           }
         ].map(entry => (
           <Link
