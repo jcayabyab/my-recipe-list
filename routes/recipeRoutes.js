@@ -47,10 +47,18 @@ module.exports = (app, connection) => {
   });
 
   app.get("/api/recipe", async (req, res) => {
-    const { recipeId } = req.query;
+    const { recipeId, userName } = req.query;
 
     let recipeQuery = `
-      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl
+      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl,
+      CASE WHEN EXISTS
+      (
+        SELECT * FROM CONTAINS AS c
+        WHERE c.OwnerUserName = ${connection.escape(userName)}
+        AND r.RecipeID = c.RecipeID
+      )
+      THEN 1 ELSE 0 END
+      AS isInList
       FROM RECIPE as r, USER_RECIPE_WRITES as urw, USER as u
       WHERE r.RecipeID = ${connection.escape(recipeId)}
       AND r.RecipeID = urw.RecipeID
@@ -144,7 +152,8 @@ module.exports = (app, connection) => {
         ingredients,
         kitchenware,
         steps,
-        userName
+        userName,
+        categories
       } = req.body;
 
       let query = `
@@ -181,6 +190,20 @@ module.exports = (app, connection) => {
           .join(", ")}
       `;
 
+      const categoriesQuery = `
+        INSERT INTO BELONGS_TO
+        VALUES
+        ${categories
+          .map(
+            (category, index) =>
+              `(
+              ${connection.escape(recipeId)},
+              ${connection.escape(category)}
+              )`
+          )
+          .join(", ")}
+      `;
+
       const stepsQuery = `
         INSERT INTO STEP
         VALUES
@@ -211,8 +234,13 @@ module.exports = (app, connection) => {
         return sendNotOneUpdateError(res);
       }
 
-      await connection.promise().query(itemsQuery);
+      console.log(categoriesQuery);
+
+      if ([...kitchenware, ...ingredients].length !== 0) {
+        await connection.promise().query(itemsQuery);
+      }
       await connection.promise().query(stepsQuery);
+      await connection.promise().query(categoriesQuery);
 
       // short way to avoid making another SQL query
       res.send({ recipeId });

@@ -66,6 +66,18 @@ module.exports = (app, connection) => {
         return sendNotOneUpdateError(res);
       }
 
+      // create new list
+      const insertQuery = `
+          INSERT INTO LIST VALUES
+          (
+            ${connection.escape(userName)},
+            ${connection.escape(`${userName}'s list`)},
+            ${connection.escape(toSqlDateTime(new Date()))}
+          )
+      `;
+
+      await connection.promise().query(insertQuery);
+
       const [userRows] = await connection.promise().query(
         `
           SELECT * FROM USER 

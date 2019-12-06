@@ -6,12 +6,14 @@ import {
   CssBaseline,
   Container,
   Button,
-  Avatar,
   Grid,
   Box,
-  Typography
+  Typography,
+  useTheme
 } from "@material-ui/core";
+import FriendsList from "./FriendsList";
 import styled from "styled-components";
+import ColoredAvatar from "../../utils/ColoredAvatar";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -29,6 +31,8 @@ const Row = styled.div`
 const UserProfilePage = ({ location, history }) => {
   const [profileUser, setProfileUser] = useState(null);
   const [user] = useContext(UserContext);
+
+  const { palette } = useTheme();
 
   const getProfileUser = async () => {
     const userNameFromUrl = location.pathname.split("/").slice(-1)[0];
@@ -90,11 +94,19 @@ const UserProfilePage = ({ location, history }) => {
             <Grid item xs>
               <Row>
                 <Box display="flex" flexDirection="column" alignItems="center">
-                  <Avatar
-                    style={{ width: "150px", height: "150px", borderRadius: 0 }}
+                  <ColoredAvatar
+                    style={{
+                      width: "150px",
+                      height: "150px",
+                      borderRadius: 0,
+                      fontSize: "80px"
+                    }}
                     alt="profile pic"
                     src={profileUser.profilePictureUrl}
-                  />
+                    color={palette.secondary.main}
+                  >
+                    {profileUser.firstName[0]}
+                  </ColoredAvatar>
                   {user.userName !== profileUser.userName && (
                     <React.Fragment>
                       <Button
@@ -114,25 +126,28 @@ const UserProfilePage = ({ location, history }) => {
                         >
                           Delete User
                         </Button>
-                      ) : ""}
+                      ) : (
+                        ""
+                      )}
                     </React.Fragment>
                   )}
                   {user.userName === profileUser.userName && (
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={() => history.push("/edit-account")}
+                      onClick={() => history.push("/edit-profile")}
                       style={{ marginTop: "10px" }}
                     >
                       Edit Account
                     </Button>
                   )}
                 </Box>
-                <div align="left">
-                    <Typography variant="h5">
-                      {profileUser.firstName} {profileUser.lastName}
-                    </Typography>
-                    <Typography variant="body1">{profileUser.country}</Typography>
+                <div>
+                  <Typography variant="h5">
+                    {profileUser.firstName} {profileUser.lastName}
+                  </Typography>
+                  <Typography variant="body1">{profileUser.country}</Typography>
+                  <FriendsList friends={profileUser.friends}></FriendsList>
                 </div>
               </Row>
             </Grid>

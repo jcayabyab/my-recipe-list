@@ -16,11 +16,14 @@ import {
   ListItemText,
   Tooltip,
   useTheme,
-  Button
+  Button,
+  IconButton
 } from "@material-ui/core";
 import {
   Fastfood as FastfoodIcon,
-  LocalDining as LocalDiningIcon
+  LocalDining as LocalDiningIcon,
+  Add as AddIcon,
+  Check as CheckIcon
 } from "@material-ui/icons";
 import styled from "styled-components";
 import Reviews from "./Reviews";
@@ -56,16 +59,18 @@ const RecipePage = ({ location, history }) => {
   const { palette } = useTheme();
 
   const getRecipe = useCallback(async () => {
-    const idFromUrl = location.pathname.split("/").slice(-1)[0];
+    if (user) {
+      const idFromUrl = location.pathname.split("/").slice(-1)[0];
+      const { data: theRecipe } = await axios.get("/api/recipe", {
+        params: {
+          recipeId: idFromUrl,
+          userName: user.userName
+        }
+      });
 
-    const { data: theRecipe } = await axios.get("/api/recipe", {
-      params: {
-        recipeId: idFromUrl
-      }
-    });
-
-    setRecipe(theRecipe);
-  }, [location]);
+      setRecipe(theRecipe);
+    }
+  }, [location, user]);
 
   useEffect(() => {
     getRecipe();
@@ -104,6 +109,19 @@ const RecipePage = ({ location, history }) => {
     history.push("/home");
   };
 
+  const handleListAdd = async () => {
+    const idFromUrl = location.pathname.split("/").slice(-1)[0];
+
+    if (!recipe.isInList) {
+      await axios.post("/api/list/add", {
+        userName: user.userName,
+        recipeId: idFromUrl
+      });
+    }
+
+    history.push("/list");
+  };
+
   /*
   this is the data (for now, we'll add more later)
   {
@@ -139,19 +157,41 @@ const RecipePage = ({ location, history }) => {
                   </Typography>
                   <Tooltip title={`By ${recipe.firstName} ${recipe.lastName}`}>
                     <ColoredAvatar
-                      style={{ width: "60px", height: "60px" }}
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        fontSize: "20pt"
+                      }}
                       color={palette.secondary.main}
                       src={recipe.profilePictureUrl}
-                    ></ColoredAvatar>
+                    >
+                      {recipe.firstName[0]}
+                    </ColoredAvatar>
                   </Tooltip>
                 </Box>
-                <Paper style={{ height: "6em", padding: "1em" }}>
-                  {recipe.description}
+                <Paper style={{ minHeight: "6em", padding: "1em" }}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Typography variant="body1">
+                      {recipe.description}
+                    </Typography>
+                    {recipe.isInList ? (
+                      <Tooltip title="Added to list">
+                        <IconButton onClick={handleListAdd}>
+                          <CheckIcon></CheckIcon>
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Add to personal list">
+                        <IconButton onClick={handleListAdd}>
+                          <AddIcon></AddIcon>
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </Box>
                 </Paper>
               </div>
             </Grid>
           </Row>
-
           {recipe.ingredients.length || recipe.kitchenware.length ? (
             <Paper
               style={{
@@ -203,15 +243,17 @@ const RecipePage = ({ location, history }) => {
               ))}
             </ol>
           </Paper>
-          {user.isAdmin && (
+          {user.isAdmin ? (
             <Button
               variant="contained"
               color="secondary"
               onClick={handleRecipeDelete}
-              style={{margin: "10px"}}
+              style={{ margin: "10px" }}
             >
               Delete Recipe
             </Button>
+          ) : (
+            ""
           )}
           <Reviews
             handleSubmitReview={handleSubmitReview}

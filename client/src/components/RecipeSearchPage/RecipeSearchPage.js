@@ -67,16 +67,22 @@ const RecipeSearchPage = props => {
   );
 
   const renderTableHeader = () => (
-    <TableHead>
-      <TableRow>
-        <TableHeaderCell palette={palette} align="right">
-          Recipe Name
-        </TableHeaderCell>
-        <TableHeaderCell palette={palette} align="right">
-          Description
-        </TableHeaderCell>
-      </TableRow>
-    </TableHead>
+    <React.Fragment>
+      <colgroup>
+        <col width="20%"></col>
+        <col width="80%"></col>
+      </colgroup>
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell palette={palette} align="right">
+            Recipe Name
+          </TableHeaderCell>
+          <TableHeaderCell palette={palette} align="right">
+            Description
+          </TableHeaderCell>
+        </TableRow>
+      </TableHead>
+    </React.Fragment>
   );
 
   return (

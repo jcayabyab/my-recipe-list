@@ -26,7 +26,7 @@ const Banner = styled(Paper)`
   height: 150px;
   padding: 20px;
   margin-bottom: 10px;
-  background-image: url("${({ pictureUrl }) => pictureUrl}");
+  background-image: url("${({ url }) => url}");
   background-size: cover;
   background-position: center;
   color: white;
@@ -46,9 +46,12 @@ const CategoryPage = ({ location, history }) => {
 
   useEffect(() => {
     const getCategoryRecipes = async () => {
-      const categoryFromUrl = location.pathname.split("/").slice(-1)[0];
+      const categoryFromUrl = location.pathname
+        .split("/")
+        .slice(-1)[0]
+        .replace("-", " ");
 
-      const { data: categoryData } = await axios.get("/api/category/", {
+      const { data: categoryData } = await axios.get("/api/category", {
         params: { categoryName: categoryFromUrl }
       });
 
@@ -92,7 +95,7 @@ const CategoryPage = ({ location, history }) => {
     <React.Fragment>
       <CssBaseline />
       <Body>
-        <Banner pictureUrl={category.pictureUrl}>
+        <Banner url={category.pictureUrl}>
           <Typography variant="h3" component="h3" style={{ color: "white" }}>
             {category.categoryName}
           </Typography>

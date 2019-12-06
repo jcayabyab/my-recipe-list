@@ -10,7 +10,8 @@ import {
   TableRow,
   Typography,
   IconButton,
-  Tooltip
+  Tooltip,
+  Box
 } from "@material-ui/core";
 import {
   RemoveCircle as RemoveCircleIcon,
@@ -39,7 +40,7 @@ const TableRowOptions = styled(TableRow)`
   }
 `;
 
-const ListPage = ({ location, history }) => {
+const ListPage = ({ history }) => {
   const [list, setList] = useState({ recipes: [] });
   const [user] = useContext(UserContext);
   const { palette } = useTheme();
@@ -115,17 +116,19 @@ const ListPage = ({ location, history }) => {
   }) => (
     <TableRowOptions hover role="checkbox" tabIndex={-1} key={recipeId}>
       <TableCell>
-        <Tooltip title="Remove recipe from list">
-          <IconButton onClick={() => handleEntryDelete(recipeId)}>
-            <RemoveCircleIcon></RemoveCircleIcon>
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Go to recipe page">
-          <IconButton onClick={() => history.push("/recipe/" + recipeId)}>
-            <ExitToAppIcon></ExitToAppIcon>
-          </IconButton>
-        </Tooltip>
-        {name}
+        <Box display="flex">
+          <Tooltip title="Remove recipe from list">
+            <IconButton onClick={() => handleEntryDelete(recipeId)}>
+              <RemoveCircleIcon></RemoveCircleIcon>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Go to recipe page">
+            <IconButton onClick={() => history.push("/recipes/" + recipeId)}>
+              <ExitToAppIcon></ExitToAppIcon>
+            </IconButton>
+          </Tooltip>
+          <Box marginLeft="5px">{name}</Box>
+        </Box>
       </TableCell>
       <TableCell align="right">{description}</TableCell>
       <TableCell size="small" align="right">
@@ -149,17 +152,24 @@ const ListPage = ({ location, history }) => {
   );
 
   const renderTableHeader = () => (
-    <TableHead>
-      <TableRow>
-        <TableHeaderCell palette={palette}>Recipe Name</TableHeaderCell>
-        <TableHeaderCell palette={palette} align="right">
-          Description
-        </TableHeaderCell>
-        <TableHeaderCell palette={palette} align="right">
-          Times Made
-        </TableHeaderCell>
-      </TableRow>
-    </TableHead>
+    <React.Fragment>
+      <colgroup>
+        <col width="20%"></col>
+        <col width="65%"></col>
+        <col width="15%"></col>
+      </colgroup>
+      <TableHead>
+        <TableRow>
+          <TableHeaderCell palette={palette}>Recipe Name</TableHeaderCell>
+          <TableHeaderCell palette={palette} align="right">
+            Description
+          </TableHeaderCell>
+          <TableHeaderCell palette={palette} align="right">
+            Times Made
+          </TableHeaderCell>
+        </TableRow>
+      </TableHead>
+    </React.Fragment>
   );
 
   return (

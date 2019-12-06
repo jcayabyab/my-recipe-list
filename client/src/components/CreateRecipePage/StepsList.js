@@ -33,6 +33,7 @@ const StepsList = ({ steps, setSteps }) => {
         value={step}
         label={`Step ${index + 1}`}
         key={index}
+        multiline
       ></TextField>
     );
   };

@@ -34,7 +34,7 @@ const CategoriesPage = ({ history }) => {
   }, [setCategories]);
 
   const gotoCategory = categoryName => {
-    history.push("/category/" + categoryName);
+    history.push("/category/" + categoryName.replace(" ", "-"));
   };
 
   // this should be iterable

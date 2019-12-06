@@ -45,13 +45,10 @@ module.exports = (app, connection) => {
           const rowData = camelcaseKeys({ ...row });
 
           const rowQuery = `
-          SELECT rc.recipeId, rc.name, rc.description, rc.pictureUrl, AVG(rv.OverallRating) AS 'overallRating', c.amountOfTimesMade
-          FROM RECIPE as rc LEFT JOIN (REVIEW as rv, CONTAINS as c)
-          ON rv.RecipeID = rc.RecipeID 
-          WHERE rc.RecipeID = c.RecipeID
-          AND c.ListName = ${connection.escape(rowData.listName)}
-          AND c.OwnerUserName = ${connection.escape(rowData.ownerUserName)}
-          GROUP BY rc.recipeId, rc.name, rc.description, rc.pictureUrl
+          SELECT rc.recipeId, rc.name, rc.description, rc.pictureUrl, c.amountOfTimesMade
+          FROM RECIPE as rc LEFT JOIN CONTAINS as c
+          ON rc.RecipeID = c.RecipeID
+          WHERE c.OwnerUserName = ${connection.escape(rowData.ownerUserName)}
           `;
 
           const [recipes] = await connection.promise().query(rowQuery);
@@ -93,6 +90,7 @@ module.exports = (app, connection) => {
 
       res.send("Success");
     } catch (error) {
+      console.log(error)
       return sendSQLError(res);
     }
   });
@@ -100,14 +98,14 @@ module.exports = (app, connection) => {
   app.post("/api/list/remove", async (req, res) => {
     const { userName, recipeId } = req.body;
 
-    // TODO make this from client side
-    const listName = `${ownerUserName}'s list`;
+    const listName = `${userName}'s list`;
 
     const query = `
       DELETE FROM CONTAINS
       WHERE
-        OwnerUserName = ${connection.escape(userName)},
-        AND ListName = ${connection.escape(listName)},
+      (
+        OwnerUserName = ${connection.escape(userName)}
+        AND ListName = ${connection.escape(listName)}
         AND RecipeID = ${connection.escape(recipeId)}
       )
     `;
@@ -121,6 +119,7 @@ module.exports = (app, connection) => {
 
       res.send("Success");
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });

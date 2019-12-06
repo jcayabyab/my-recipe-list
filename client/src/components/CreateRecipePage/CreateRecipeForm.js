@@ -34,6 +34,7 @@ const TextFieldMargin = styled(TextField)`
 
 const INGREDIENT = "INGREDIENT";
 const KITCHENWARE = "KITCHENWARE";
+const CATEGORY = "CATEGORY";
 
 const CreateRecipeForm = ({ handleSave }) => {
   const [recipeName, setRecipeName] = React.useState("");
@@ -42,11 +43,13 @@ const CreateRecipeForm = ({ handleSave }) => {
   const [showErrors, setShowErrors] = React.useState(false);
   const [ingredientTags, setIngredientTags] = React.useState([]);
   const [kitchenwareTags, setKitchenwareTags] = React.useState([]);
+  const [categoryTags, setCategoryTags] = React.useState([]);
   const [steps, setSteps] = React.useState([""]);
 
   // for getting from server
   const [ingredients, setIngredients] = React.useState([]);
   const [kitchenware, setKitchenware] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
 
   const { palette } = useTheme();
 
@@ -65,8 +68,14 @@ const CreateRecipeForm = ({ handleSave }) => {
       setKitchenware(theKitchenware);
     };
 
+    const getCategories = async () => {
+      const { data: theCategories } = await axios.get("/api/categories");
+      setCategories(theCategories);
+    };
+
     getIngredients();
     getKitchenware();
+    getCategories();
   }, [setIngredients, setKitchenware]);
 
   const handleSubmit = e => {
@@ -81,6 +90,7 @@ const CreateRecipeForm = ({ handleSave }) => {
         pictureUrl,
         ingredientTags.map(ingredient => ingredient.value),
         kitchenwareTags.map(item => item.value),
+        categoryTags.map(category => category.value),
         steps
       );
     }
@@ -93,6 +103,9 @@ const CreateRecipeForm = ({ handleSave }) => {
         break;
       case KITCHENWARE:
         setKitchenwareTags(tags);
+        break;
+      case CATEGORY:
+        setCategoryTags(tags);
         break;
       default:
         break;
@@ -153,7 +166,7 @@ const CreateRecipeForm = ({ handleSave }) => {
               zIndex: 3
             })
           }}
-          placeholder="Select ingredients..."
+          placeholder="Select needed ingredients..."
         ></Select>
         <Select
           isMulti
@@ -169,9 +182,26 @@ const CreateRecipeForm = ({ handleSave }) => {
               zIndex: 3
             })
           }}
-          placeholder="Select kitchenware..."
+          placeholder="Select needed kitchenware..."
+        ></Select>
+        <Select
+          isMulti
+          onChange={selected => handleTagChange(selected, CATEGORY)}
+          options={categories.map(item => ({
+            value: item.categoryName,
+            label: item.categoryName
+          }))}
+          styles={{
+            container: styles => ({ ...styles, flex: "1", margin: "0px 20px" }),
+            menu: (provided, state) => ({
+              ...provided,
+              zIndex: 3
+            })
+          }}
+          placeholder="Select recipe categories..."
         ></Select>
       </Box>
+
       <Box display="flex" flexDirection="column" justifyContent="center">
         {steps.length === 0 && (
           <FormHelperText style={{ color: palette.error.main }}>

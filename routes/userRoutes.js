@@ -28,8 +28,7 @@ module.exports = (app, connection) => {
 
   app.get("/api/profile", async (req, res) => {
     const { ownUserName, userName } = req.query;
-    try {
-      let query = `
+    let query = `
         SELECT 
           UserName, FirstName, LastName, Country, ProfilePictureUrl,
             CASE WHEN EXISTS
@@ -52,13 +51,37 @@ module.exports = (app, connection) => {
         WHERE UserName = ${connection.escape(userName)}
       `;
 
+    let friendsQuery = `
+      SELECT u.UserName, u.FirstName, u.LastName, u.ProfilePictureUrl
+      FROM USER AS u, FRIEND AS f
+      WHERE
+      (
+        UserName_A = u.UserName
+        AND
+        UserName_B = ${connection.escape(userName)}
+      )
+      OR
+      (
+        UserName_B = u.UserName
+        AND
+        UserName_A = ${connection.escape(userName)}
+      )
+    `;
+
+    try {
       const [rows] = await connection.promise().query(query);
 
       if (rows.length === 0) {
         return sendNotFoundError(res);
       }
 
-      res.send(camelcaseKeys(rows[0]));
+      const profile = rows[0];
+
+      const [friendRows] = await connection.promise().query(friendsQuery);
+
+      profile.friends = friendRows.map(row => camelcaseKeys(row));
+
+      res.send(camelcaseKeys(profile));
     } catch (error) {
       return sendSQLError(res);
     }

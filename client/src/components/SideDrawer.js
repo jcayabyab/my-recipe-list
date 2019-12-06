@@ -14,7 +14,6 @@ import {
   EmojiPeople as EmojiPeopleIcon,
   AccountCircle as AccountCircleIcon,
   ExitToApp as ExitToAppIcon,
-  Kitchen as KitchenIcon,
   Class as ClassIcon,
   PostAdd as PostAddIcon
 } from "@material-ui/icons";
@@ -36,7 +35,7 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
         {[
           {
             label: "Search recipes",
-            icon: <KitchenIcon></KitchenIcon>,
+            icon: <LocalDiningIcon></LocalDiningIcon>,
             route: "/home"
           },
           {
@@ -53,11 +52,6 @@ const SideDrawer = ({ open, setDrawerIsOpen }) => {
             label: "View my list",
             icon: <ListIcon></ListIcon>,
             route: `/list`
-          },
-          {
-            label: "View kitchen items",
-            icon: <LocalDiningIcon></LocalDiningIcon>,
-            route: "/items"
           },
           {
             label: "Search profiles",

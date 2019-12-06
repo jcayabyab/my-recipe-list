@@ -32,7 +32,7 @@ const Review = ({ review, handleDelete }) => {
     reviewId
   } = review;
   const { palette } = useTheme();
-  const [{isAdmin}] = useContext(UserContext);
+  const [user] = useContext(UserContext);
 
   let ratingColor = green[500];
   if (overallRating < 3.0) {
@@ -89,7 +89,7 @@ const Review = ({ review, handleDelete }) => {
           <Typography variant="body2" component="p">
             {body}
           </Typography>
-          {isAdmin && (
+          {user.isAdmin || user.userName === writerUserName ? (
             <Button
               variant="contained"
               color="secondary"
@@ -97,6 +97,8 @@ const Review = ({ review, handleDelete }) => {
             >
               Delete Review
             </Button>
+          ) : (
+            ""
           )}
         </Box>
       </CardContent>

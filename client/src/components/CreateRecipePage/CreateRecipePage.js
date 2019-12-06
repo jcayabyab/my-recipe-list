@@ -19,6 +19,7 @@ const CreateRecipePage = ({ location, history }) => {
     pictureUrl,
     ingredients,
     kitchenware,
+    categories,
     steps
   ) => {
     try {
@@ -28,6 +29,7 @@ const CreateRecipePage = ({ location, history }) => {
         pictureUrl,
         ingredients,
         kitchenware,
+        categories,
         steps: steps.filter(step => step.length),
         userName: userName
       });
