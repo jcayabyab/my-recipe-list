@@ -244,7 +244,7 @@ const RecipePage = ({ location, history }) => {
               ))}
             </ol>
           </Paper>
-          {user.isAdmin ? (
+          {user.isAdmin || user.userName === recipe.userName ? (
             <Button
               variant="contained"
               color="secondary"
