@@ -240,7 +240,10 @@ module.exports = (app, connection) => {
         await connection.promise().query(itemsQuery);
       }
       await connection.promise().query(stepsQuery);
-      await connection.promise().query(categoriesQuery);
+
+      if (categories.length !== 0) {
+        await connection.promise().query(categoriesQuery);
+      }
 
       // short way to avoid making another SQL query
       res.send({ recipeId });
