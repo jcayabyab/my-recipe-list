@@ -26,7 +26,7 @@ const Row = styled.div`
   }
 `;
 
-const UserProfilePage = ({ location }) => {
+const UserProfilePage = ({ location, history }) => {
   const [profileUser, setProfileUser] = useState(null);
   const [user] = useContext(UserContext);
 
@@ -60,6 +60,14 @@ const UserProfilePage = ({ location }) => {
 
     getProfileUser();
   };
+
+  const handleDelete = async ()  => {
+    await axios.post("/api/user/delete", {
+      userName: profileUser.userName
+    });
+
+    history.push("/profiles");
+  }
 
   /*
   this is the data
@@ -95,6 +103,16 @@ const UserProfilePage = ({ location }) => {
                   >
                     {profileUser.isFriend ? "Unfriend" : "Add friend"}
                   </Button>
+                  {user.isAdmin && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleDelete}
+                      style={{ marginTop: "10px" }}
+                    >
+                      Delete User
+                    </Button>
+                  )}
                 </Box>
                 <div align="left">
                     <Typography variant="h5">

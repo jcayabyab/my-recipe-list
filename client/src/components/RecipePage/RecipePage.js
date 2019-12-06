@@ -15,7 +15,8 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-  useTheme
+  useTheme,
+  Button
 } from "@material-ui/core";
 import {
   Fastfood as FastfoodIcon,
@@ -48,7 +49,7 @@ const Column = styled.div`
   }
 `;
 
-const RecipePage = ({ location }) => {
+const RecipePage = ({ location, history }) => {
   const [recipe, setRecipe] = useState(null);
   const [user] = useContext(UserContext);
 
@@ -93,6 +94,14 @@ const RecipePage = ({ location }) => {
     });
 
     getRecipe();
+  };
+
+  const handleRecipeDelete = async () => {
+    await axios.post("/api/recipe/delete", {
+      recipeId: recipe.recipeId
+    });
+
+    history.push("/home");
   };
 
   /*
@@ -194,6 +203,16 @@ const RecipePage = ({ location }) => {
               ))}
             </ol>
           </Paper>
+          {user.isAdmin && (
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleRecipeDelete}
+              style={{margin: "10px"}}
+            >
+              Delete Recipe
+            </Button>
+          )}
           <Reviews
             handleSubmitReview={handleSubmitReview}
             reviews={recipe.reviews}
