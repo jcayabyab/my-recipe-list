@@ -34,7 +34,6 @@ const SearchPage = props => {
     const { data: users } = await axios.get("/api/profiles", {
       params: { searchTerm }
     });
-    console.log(users);
     setUsers(users);
   };
 

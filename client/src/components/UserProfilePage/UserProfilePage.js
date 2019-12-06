@@ -26,7 +26,7 @@ const Row = styled.div`
   }
 `;
 
-const UserProfilePage = ({ location }) => {
+const UserProfilePage = ({ location, history }) => {
   const [profileUser, setProfileUser] = useState(null);
   const [user] = useContext(UserContext);
 
@@ -61,6 +61,14 @@ const UserProfilePage = ({ location }) => {
     getProfileUser();
   };
 
+  const handleDelete = async () => {
+    await axios.post("/api/user/delete", {
+      userName: profileUser.userName
+    });
+
+    history.push("/profiles");
+  };
+
   /*
   this is the data
   {
@@ -87,14 +95,38 @@ const UserProfilePage = ({ location }) => {
                     alt="profile pic"
                     src={profileUser.profilePictureUrl}
                   />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleFriend}
-                    style={{ marginTop: "10px" }}
-                  >
-                    {profileUser.isFriend ? "Unfriend" : "Add friend"}
-                  </Button>
+                  {user.userName !== profileUser.userName && (
+                    <React.Fragment>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleFriend}
+                        style={{ marginTop: "10px" }}
+                      >
+                        {profileUser.isFriend ? "Unfriend" : "Add friend"}
+                      </Button>
+                      {user.isAdmin && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={handleDelete}
+                          style={{ marginTop: "10px" }}
+                        >
+                          Delete User
+                        </Button>
+                      )}
+                    </React.Fragment>
+                  )}
+                  {user.userName === profileUser.userName && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => history.push("/edit-account")}
+                      style={{ marginTop: "10px" }}
+                    >
+                      Edit Account
+                    </Button>
+                  )}
                 </Box>
                 <div align="left">
                     <Typography variant="h5">
