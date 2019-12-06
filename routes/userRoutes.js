@@ -31,23 +31,30 @@ module.exports = (app, connection) => {
     let query = `
         SELECT 
           UserName, FirstName, LastName, Country, ProfilePictureUrl,
-            CASE WHEN EXISTS
+          CASE WHEN EXISTS
+          (
+            SELECT * FROM FRIEND
+            WHERE
             (
-              SELECT * FROM FRIEND
-              WHERE
-              (
-                UserName_A = ${connection.escape(ownUserName)}
-                AND UserName_B = ${connection.escape(userName)}
-              )
-              OR
-              (
-                UserName_B = ${connection.escape(ownUserName)}
-                AND UserName_A = ${connection.escape(userName)}
-              )
+              UserName_A = ${connection.escape(ownUserName)}
+              AND UserName_B = ${connection.escape(userName)}
             )
-            THEN 1 ELSE 0 END
-            AS isFriend
-        FROM USER
+            OR
+            (
+              UserName_B = ${connection.escape(ownUserName)}
+              AND UserName_A = ${connection.escape(userName)}
+            )
+          )
+          THEN 1 ELSE 0 END
+          AS isFriend,
+          CASE WHEN EXISTS
+          (
+            SELECT * FROM ADMIN AS a
+            WHERE a.UserName = u.UserName
+          )
+          THEN 1 ELSE 0 END
+          AS isAdmin
+        FROM USER as u
         WHERE UserName = ${connection.escape(userName)}
       `;
 
@@ -83,6 +90,7 @@ module.exports = (app, connection) => {
 
       res.send(camelcaseKeys(profile));
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });

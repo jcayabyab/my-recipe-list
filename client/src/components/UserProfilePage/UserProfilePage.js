@@ -132,7 +132,7 @@ const UserProfilePage = ({ location, history }) => {
                       >
                         {profileUser.isFriend ? "Unfriend" : "Add friend"}
                       </Button>
-                      {user.isAdmin ? (
+                      {user.isAdmin && !profileUser.isAdmin ? (
                         <Button
                           variant="contained"
                           color="secondary"
