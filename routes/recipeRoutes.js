@@ -50,7 +50,7 @@ module.exports = (app, connection) => {
     const { recipeId, userName } = req.query;
 
     let recipeQuery = `
-      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl,
+      SELECT r.*, u.FirstName, u.LastName, u.ProfilePictureUrl, u.UserName,
       CASE WHEN EXISTS
       (
         SELECT * FROM CONTAINS AS c

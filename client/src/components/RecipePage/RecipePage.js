@@ -164,6 +164,7 @@ const RecipePage = ({ location, history }) => {
                       }}
                       color={palette.secondary.main}
                       src={recipe.profilePictureUrl}
+                      onClick={() => history.push("/user/" + recipe.userName)}
                     >
                       {recipe.firstName[0]}
                     </ColoredAvatar>

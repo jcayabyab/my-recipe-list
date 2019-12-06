@@ -90,11 +90,24 @@ module.exports = (app, connection) => {
   app.post("/api/user/delete", async (req, res) => {
     const { userName } = req.body;
     try {
+      let deleteRecipeQuery = `
+        DELETE r FROM RECIPE AS r
+        WHERE EXISTS
+        (
+          SELECT * FROM USER_RECIPE_WRITES AS urw
+          WHERE urw.RecipeID = r.RecipeID
+          AND urw.UserName = ${connection.escape(userName)}
+        ) 
+      `;
+
       let query = `
         DELETE FROM USER
         WHERE UserName = ${connection.escape(userName)}
       `;
 
+      await connection.promise().query("SET SQL_SAFE_UPDATES = 0");
+      await connection.promise().query(deleteRecipeQuery);
+      await connection.promise().query("SET SQL_SAFE_UPDATES = 1");
       const [results] = await connection.promise().query(query);
 
       if (results.affectedRows !== 1) {
@@ -103,6 +116,7 @@ module.exports = (app, connection) => {
 
       res.send("Successfully deleted user " + userName);
     } catch (error) {
+      console.log(error);
       return sendSQLError(res);
     }
   });
