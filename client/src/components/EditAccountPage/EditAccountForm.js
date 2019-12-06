@@ -127,9 +127,11 @@ const EditAccountForm = ({ handleAccountChange, user }) => {
         onChange={e => setProfilePictureUrl(e.target.value)}
         InputProps={{ value: profilePictureUrl }}
       ></TextFieldMargin>
-      <SubmitButton color="secondary" type="submit" variant="contained">
-        Submit
-      </SubmitButton>
+      <Box display="flex" justifyContent="center" marginTop="10px">
+        <SubmitButton color="secondary" type="submit" variant="contained">
+          Submit
+        </SubmitButton>
+      </Box>
     </Form>
   );
 };
