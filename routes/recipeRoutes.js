@@ -26,6 +26,31 @@ module.exports = (app, connection) => {
     }
   });
 
+  app.get("/api/recipes/search", async (req, res) => {
+    const { userName } = req.query;
+
+    let query = `
+      SELECT rc.recipeId, rc.name, rc.description, rc.pictureUrl, AVG(rv.OverallRating) AS 'overallRating'
+      FROM RECIPE as rc LEFT JOIN REVIEW as rv
+      ON rv.RecipeID = rc.RecipeID
+      WHERE EXISTS
+      (
+        SELECT * FROM USER_RECIPE_WRITES AS urw
+        WHERE urw.UserName = ${connection.escape(userName)}
+        AND urw.RecipeID = rc.RecipeID
+      )
+      GROUP BY rc.recipeId, rc.name, rc.description, rc.pictureUrl
+    `;
+
+    try {
+      const [rows] = await connection.promise().query(query);
+      res.send(camelcaseKeys(rows));
+    } catch (error) {
+      console.log("SQL exception occurred: ", error);
+      return sendSQLError(res);
+    }
+  });
+
   app.post("/api/recipes/search", async (req, res) => {
     // accepts { name: String, ingredients: array of string, kitchenItems: array of string }
     const { searchQuery, ingredients, kitchenItems } = req.body;

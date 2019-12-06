@@ -11,7 +11,7 @@ const FriendsList = ({ friends, history }) => {
       <Typography variant="h5" style={{ margin: "15px 0px 3px" }}>
         Friends:
       </Typography>
-      <Box display="flex" alignItems="center">
+      <Box display="flex" alignItems="center" marginBottom="15px">
         {friends.map(friend => (
           <Tooltip
             title={friend.firstName + " " + friend.lastName}

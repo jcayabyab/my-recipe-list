@@ -14,6 +14,7 @@ import {
 import FriendsList from "./FriendsList";
 import styled from "styled-components";
 import ColoredAvatar from "../../utils/ColoredAvatar";
+import RecipeTable from "../../utils/RecipeTable";
 
 const Body = styled(Container)`
   padding: 20px 0px;
@@ -30,6 +31,7 @@ const Row = styled.div`
 
 const UserProfilePage = ({ location, history }) => {
   const [profileUser, setProfileUser] = useState(null);
+  const [profileRecipes, setProfileRecipes] = useState([]);
   const [user] = useContext(UserContext);
 
   const { palette } = useTheme();
@@ -48,8 +50,21 @@ const UserProfilePage = ({ location, history }) => {
   };
 
   useEffect(() => {
+    const getProfileRecipes = async () => {
+      const userNameFromUrl = location.pathname.split("/").slice(-1)[0];
+
+      const { data: recipes } = await axios.get("/api/recipes/search", {
+        params: {
+          userName: userNameFromUrl
+        }
+      });
+
+      setProfileRecipes(recipes);
+    };
+
     if (user !== null) {
       getProfileUser();
+      getProfileRecipes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, location]);
@@ -148,6 +163,14 @@ const UserProfilePage = ({ location, history }) => {
                   </Typography>
                   <Typography variant="body1">{profileUser.country}</Typography>
                   <FriendsList friends={profileUser.friends}></FriendsList>
+                  {profileRecipes.length !== 0 ? (
+                    <React.Fragment>
+                      <Typography variant="h5">Published recipes:</Typography>
+                      <RecipeTable recipes={profileRecipes}></RecipeTable>
+                    </React.Fragment>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </Row>
             </Grid>

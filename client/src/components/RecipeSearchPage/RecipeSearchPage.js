@@ -3,32 +3,17 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
 import styled from "styled-components";
 import axios from "axios";
-import {
-  useTheme,
-  TableHead,
-  TableCell,
-  TableRow,
-  Typography,
-  Box
-} from "@material-ui/core";
+import { Typography, Box } from "@material-ui/core";
 import { withRouter } from "react-router-dom";
-import ResultList from "../../utils/ResultList";
 import RecipeSearchForm from "./RecipeSearchForm";
-import TableHeaderCell from "../../utils/TableHeaderCell";
+import RecipeTable from "../../utils/RecipeTable";
 
 const Body = styled(Container)`
   padding: 20px 0px;
 `;
 
-const TableRowLink = styled(TableRow)`
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
 const RecipeSearchPage = props => {
   const [recipes, setRecipes] = useState([]);
-  const { palette } = useTheme();
 
   useEffect(() => {
     const getAllRecipes = async () => {
@@ -48,43 +33,6 @@ const RecipeSearchPage = props => {
     setRecipes(recipes);
   };
 
-  const handleTableClick = recipeId => {
-    props.history.push(`/recipes/${recipeId}`);
-  };
-
-  // this should be iterable
-  const renderTableRow = recipe => (
-    <TableRowLink
-      hover
-      onClick={() => handleTableClick(recipe.recipeId)}
-      role="checkbox"
-      tabIndex={-1}
-      key={recipe.recipeId}
-    >
-      <TableCell align="right">{recipe.name}</TableCell>
-      <TableCell align="right">{recipe.description}</TableCell>
-    </TableRowLink>
-  );
-
-  const renderTableHeader = () => (
-    <React.Fragment>
-      <colgroup>
-        <col width="20%"></col>
-        <col width="80%"></col>
-      </colgroup>
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell palette={palette} align="right">
-            Recipe Name
-          </TableHeaderCell>
-          <TableHeaderCell palette={palette} align="right">
-            Description
-          </TableHeaderCell>
-        </TableRow>
-      </TableHead>
-    </React.Fragment>
-  );
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -93,11 +41,7 @@ const RecipeSearchPage = props => {
           <Typography variant="h4">Recipes</Typography>
           <RecipeSearchForm handleSearch={handleSearch}></RecipeSearchForm>
         </Box>
-        <ResultList
-          dataArr={recipes}
-          renderTableRow={renderTableRow}
-          renderTableHeader={renderTableHeader}
-        ></ResultList>
+        <RecipeTable recipes={recipes}></RecipeTable>
       </Body>
     </React.Fragment>
   );

@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { Table, TablePagination, TableBody, Paper } from "@material-ui/core";
+import {
+  Table,
+  TablePagination,
+  TableBody,
+  Paper,
+  TableCell,
+  TableRow
+} from "@material-ui/core";
 import styled from "styled-components";
 
 const Root = styled(Paper)`
@@ -32,7 +39,14 @@ const ResultList = ({ dataArr, renderTableRow, renderTableHeader }) => {
   const getCurrentPageRows = () =>
     dataArr.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
 
-  const renderDataInRows = () => getCurrentPageRows().map(renderTableRow);
+  const renderDataInRows = () =>
+    dataArr.length === 0 ? (
+      <TableRow>
+        <TableCell colspan="3">No entries in this table yet!</TableCell>
+      </TableRow>
+    ) : (
+      getCurrentPageRows().map(renderTableRow)
+    );
 
   return (
     <Root>
