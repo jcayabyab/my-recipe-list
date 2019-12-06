@@ -85,6 +85,8 @@ module.exports = (app, connection) => {
   });
 
   app.post("/api/user/update", async (req, res) => {
+    //DELETE this when functional
+    console.log(req.body);
     const {
       userName,
       firstName,
@@ -101,10 +103,10 @@ module.exports = (app, connection) => {
           Country = ${connection.escape(country)},
           ProfilePictureUrl = ${connection.escape(profilePictureUrl)}
         WHERE
-          UserName = ${conneciton.escape(userName)}
+          UserName = ${connection.escape(userName)}
       `;
 
-      const [results] = connection.promise().query(query);
+      const [results] = await connection.promise().query(query);
 
       if (results.affectedRows !== 1) {
         sendNotOneUpdateError(res);
@@ -112,6 +114,8 @@ module.exports = (app, connection) => {
 
       res.send("Success");
     } catch (error) {
+      //DELETE this when functional
+      console.log(error);
       return sendSQLError(res);
     }
   });

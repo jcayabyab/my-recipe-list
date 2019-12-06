@@ -5,6 +5,7 @@ import UserProfilePage from "./components/UserProfilePage/UserProfilePage";
 import UserSearchPage from "./components/UserSearchPage/UserSearchPage";
 import RecipePage from "./components/RecipePage/RecipePage";
 import CategoriesPage from "./components/CategoriesPage/CategoriesPage";
+import EditAccountPage from "./components/EditAccountPage/EditAccountPage";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "@material-ui/core";
 import theme from "./contexts/MuiTheme";
@@ -66,6 +67,14 @@ const App = props => {
           path="/profiles"
         >
           <UserSearchPage></UserSearchPage>
+        </RedirectRoute>
+        <RedirectRoute
+          exact
+          condition={user === null}
+          redirect="/"
+          path="/profiles"
+        >
+          <EditAccountPage></EditAccountPage>
         </RedirectRoute>
         <RedirectRoute
           condition={user === null}
