@@ -30,7 +30,7 @@
     "body-parser": "^1.18.3",
     "camelcase-keys": "^6.1.1",
     "concurrently": "^3.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "mysql2": "^2.0.1",
     "nodemon": "^1.18.9",
     "react-select": "^3.0.8"
